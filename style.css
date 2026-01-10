@@ -1,41 +1,233 @@
+:root {
+  /* Light Theme Variables */
+  --bg-color: #f8f9fa;
+  --text-color: #212529;
+  --card-bg: #ffffff;
+  --primary-color: #6366f1;
+  --primary-hover: #4f46e5;
+  --accent-color: #8b5cf6;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --ball-shadow: inset -5px -5px 10px rgba(0,0,0,0.2), 2px 2px 5px rgba(0,0,0,0.2);
+  --border-color: #e5e7eb;
+}
+
+[data-theme="dark"] {
+  /* Dark Theme Variables */
+  --bg-color: #111827;
+  --text-color: #f3f4f6;
+  --card-bg: #1f2937;
+  --primary-color: #818cf8;
+  --primary-hover: #6366f1;
+  --accent-color: #a78bfa;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+  --ball-shadow: inset -5px -5px 10px rgba(0,0,0,0.5), 2px 2px 5px rgba(0,0,0,0.5);
+  --border-color: #374151;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-    font-family: sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f0f0f0;
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.container {
-    text-align: center;
+.app-container {
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-.numbers {
-    display: flex;
-    gap: 10px;
-    margin: 20px 0;
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  margin-bottom: 20px;
 }
 
-.number {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 20px;
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-button {
-    padding: 10px 20px;
-    border-radius: 5px;
-    border: none;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
+/* Theme Toggle */
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  color: var(--text-color);
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle:hover {
+  background-color: rgba(128, 128, 128, 0.1);
+}
+
+.sun-icon {
+  display: none;
+}
+
+[data-theme="dark"] .sun-icon {
+  display: block;
+}
+
+[data-theme="dark"] .moon-icon {
+  display: none;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  background-color: var(--card-bg);
+  border-radius: 24px;
+  padding: 40px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  border: 1px solid var(--border-color);
+}
+
+.card h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  color: var(--text-color);
+  opacity: 0.7;
+  margin-bottom: 40px;
+}
+
+/* Numbers Display */
+.numbers-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 40px;
+  min-height: 80px;
+  flex-wrap: wrap;
+}
+
+.placeholder-text {
+  font-size: 1.1rem;
+  color: var(--text-color);
+  opacity: 0.5;
+  align-self: center;
+  width: 100%;
+}
+
+.ball {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  box-shadow: var(--ball-shadow);
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+@keyframes popIn {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Ball Colors based on Lotto ranges (Standard Korean style loosely) */
+.ball-range-1 { background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); } /* 1-10 */
+.ball-range-2 { background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); } /* 11-20 */
+.ball-range-3 { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); } /* 21-30 */
+.ball-range-4 { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); } /* 31-40 */
+.ball-range-5 { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); } /* 41-45 */
+
+
+/* Generate Button */
+.generate-btn {
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+.generate-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+}
+
+.generate-btn:active {
+  transform: translateY(0);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 20px 0;
+  font-size: 0.9rem;
+  opacity: 0.6;
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  .ball {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+  
+  .card {
+    padding: 25px;
+  }
+
+  .numbers-container {
+      gap: 10px;
+  }
 }
