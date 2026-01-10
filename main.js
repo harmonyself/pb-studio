@@ -315,43 +315,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (isSpeaker) {
             // 강연자 사진: 배경 제거 시도
-            const loadingOverlay = document.getElementById('loading-overlay');
-            if (loadingOverlay) loadingOverlay.style.display = 'flex'; // 구형 브라우저 호환
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) overlay.style.display = 'flex';
 
-            // @imgly/background-removal 전역 함수 체크
-            if (window.imglyRemoveBackground) {
+            // 1. 라이브러리 존재 여부 확인
+            if (typeof imglyRemoveBackground !== 'undefined') {
+                // 2. 배경 제거 실행
                 imglyRemoveBackground(file).then(blob => {
                     const url = URL.createObjectURL(blob);
                     const img = new Image();
                     img.onload = () => {
                         targetState.img = img;
-                        // 스마트 크롭: 화면 중앙 하단에 배치
-                        // 이미지 높이가 화면의 70% 정도 되게 스케일링
+                        
+                        // 스마트 크롭 (자동 배치)
                         const targetScale = (canvas.height * 0.7) / img.height;
                         targetState.scale = targetScale;
                         targetState.x = canvas.width / 2;
-                        // 하단에 딱 붙게 (중심점 기준이므로 높이의 절반을 뺌)
-                        targetState.y = canvas.height - (img.height * targetScale / 2) + 50; 
+                        targetState.y = canvas.height - (img.height * targetScale / 2) + 50;
                         
-                        if (loadingOverlay) loadingOverlay.style.display = 'none';
-                        updateSliders('강연자'); // 슬라이더 UI 동기화
+                        updateSliders('강연자');
                         drawCanvas();
+                        if (overlay) overlay.style.display = 'none';
                     };
                     img.src = url;
                 }).catch(err => {
-                    console.error("배경 제거 실패:", err);
-                    alert("배경 제거에 실패하여 원본 이미지를 사용합니다.");
-                    if (loadingOverlay) loadingOverlay.style.display = 'none';
+                    // 3. 실패 시 원본 사용 (Fallback)
+                    console.error("배경 제거 실패 (원본 사용):", err);
+                    alert("배경 제거에 실패했습니다. 원본 이미지를 사용합니다.");
+                    if (overlay) overlay.style.display = 'none';
                     loadNormalImage(file, targetState, true);
                 });
             } else {
                 // 라이브러리 로드 안됨
-                console.warn("배경 제거 라이브러리가 로드되지 않았습니다.");
-                if (loadingOverlay) loadingOverlay.style.display = 'none';
+                console.warn("배경 제거 라이브러리 없음 (원본 사용)");
+                if (overlay) overlay.style.display = 'none';
                 loadNormalImage(file, targetState, true);
             }
         } else {
-            // 일반 이미지 로드
+            // 일반 이미지 (로고, 배경 등)
             loadNormalImage(file, targetState);
         }
     }

@@ -10,10 +10,20 @@
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="https://www.gyeongnam.go.kr/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    
+    <!-- 배경 제거 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.0.3/dist/imgly-background-removal.min.js"></script>
+    
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4951905044633946"
      crossorigin="anonymous"></script>
 </head>
 <body>
+    <!-- 로딩 오버레이 -->
+    <div id="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>배경 제거 처리 중...<br>(잠시만 기다려주세요)</p>
+    </div>
+
     <div class="app-container">
         <header class="app-header">
             <h1>유썸생 | 유튜브 썸네일 생성기</h1>
@@ -35,7 +45,8 @@
                     <div class="control">
                         <label for="speakerImage">강연자 사진 (좌측)</label>
                         <input type="file" id="speakerImage" accept="image/*">
-                        <div class="checkbox-control">
+                        <p class="description" style="margin-top:5px; font-size:0.8rem; color: #4caf50;">✨ 사진을 올리면 자동으로 배경이 제거됩니다.</p>
+                        <div class="checkbox-control" style="display:none;">
                             <input type="checkbox" id="removeSpeakerBg">
                             <label for="removeSpeakerBg">인물 배경 제거 (준비중)</label>
                         </div>
