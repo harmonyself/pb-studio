@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 로딩 오버레이 (배경 제거 시 사용)
     let loadingOverlay = document.getElementById('loading-overlay');
     if (!loadingOverlay) {
-        // 오버레이가 없으면 생성 (안전장치)
+        // ... (existing overlay creation code) ...
         loadingOverlay = document.createElement('div');
         loadingOverlay.id = 'loading-overlay';
         loadingOverlay.style.display = 'none';
@@ -63,8 +63,23 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(loadingOverlay);
     }
 
+    // --- 랜덤 샘플 이미지 로직 ---
+    const sampleImages = [
+        '04XRaG6B2eY.jpg', '8mmdj8QAkJ4.jpg', '8-SB7L-WiHM.jpg', 'D1vl4VmYWjo.jpg', 
+        'E6_5VwK9knc.jpg', 'gxajbaGlJn4.jpg', 'Ia7IAMYlh2o.jpg', 'kfPvELNvP7w.jpg', 
+        'mOGXTUqS8Cc.jpg', 'o7tpNfJOk4M.jpg', 'obR3cGk50hU.jpg', 'TRIxJpBXJCU.jpg', 
+        'Wdp_sTGF7h4.jpg', '-XHZ4y98sd4.jpg', '_qNWSGlcUeI.jpg'
+    ];
+    
+    const sampleThumbElement = document.querySelector('.sample-thumb');
+    if (sampleThumbElement) {
+        const randomImage = sampleImages[Math.floor(Math.random() * sampleImages.length)];
+        sampleThumbElement.src = `imgs/${randomImage}`;
+    }
+
     // --- 상태 관리 객체 ---
     // 초기값은 캔버스 크기(1280x720)에 맞춰 설정
+
     const state = {
         speaker: { img: null, x: 640, y: 720, scale: 1 }, // 초기에는 중앙 하단
         background: { img: null, x: 0, y: 0, scale: 1 },
