@@ -129,32 +129,57 @@ body {
 
 /* ... existing styles ... */
 
-/* Mobile Optimization */
+/* Mobile Optimization Enhancements */
 @media (max-width: 900px) {
     .main-content {
-        flex-direction: column-reverse; /* Canvas on top, Controls below */
-        overflow-y: auto; /* Allow scrolling */
+        flex-direction: column-reverse; /* Canvas top, Controls bottom */
+        overflow-y: auto;
+        height: auto; /* Allow full height scrolling */
     }
 
     .controls-panel {
         width: 100%;
         border-right: none;
         border-top: 1px solid var(--border-color);
-        height: auto;
-        padding: 1rem;
+        padding: 1.5rem 1rem; /* Less padding on sides */
+        overflow-y: visible; /* Let the main container scroll */
     }
 
     .canvas-section {
         padding: 1rem;
-        min-height: 300px;
+        min-height: auto; /* Let content dictate height */
+        background-attachment: scroll; /* Fix background scrolling issue */
     }
     
     .app-header {
-        padding: 1rem;
+        padding: 0.8rem 1rem;
     }
     
     .app-header h1 {
-        font-size: 1.2rem;
+        font-size: 1.1rem; /* Smaller title */
+    }
+
+    .control-group h2 {
+        font-size: 1.1rem;
+    }
+
+    /* Touch-friendly inputs */
+    input[type="range"] {
+        height: 24px; /* Taller slider for touch */
+    }
+    
+    input[type="text"], input[type="file"], select, button {
+        padding: 10px; /* Larger touch area */
+        font-size: 16px; /* Prevent iOS zoom on focus */
+    }
+
+    /* Info section adjustments */
+    .info-section {
+        padding: 40px 15px;
+    }
+    
+    .info-section h2 {
+        font-size: 1.3rem;
     }
 }
 
