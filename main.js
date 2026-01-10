@@ -67,30 +67,51 @@ document.addEventListener('DOMContentLoaded', () => {
     function drawText(text, x, y, size, color, weight) {
         ctx.font = `${weight} ${size}px Pretendard, sans-serif`;
         ctx.fillStyle = color;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        // 가독성을 위한 외곽선
+        ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+        ctx.lineWidth = size * 0.1;
+        ctx.lineJoin = 'round';
+        ctx.strokeText(text, x, y);
+        
         ctx.fillText(text, x, y);
     }
 
-    /** 강조 태그가 포함된 텍스트를 그리는 함수 */
+    /** 강조 텍스트를 그리는 함수 (괄호를 강조 색상으로) */
     function drawHighlightedText(text, x, y, size) {
-        const highlightRegex = /\(강조\)(.*?)/g;
-        const parts = text.split(highlightRegex);
+        if (!text) return;
 
-        ctx.font = `900 ${size}px Pretendard, sans-serif`;
-        let currentX = x;
+        ctx.font = `bold ${size}px Pretendard, sans-serif`;
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'left';
 
-        parts.forEach((part, index) => {
-            if (index % 3 === 2) { // 강조 텍스트
-                const metrics = ctx.measureText(part);
-                ctx.fillStyle = state.highlightColor;
-                ctx.fillRect(currentX - 5, y - size, metrics.width + 10, size + 10);
-                ctx.fillStyle = '#000000';
-                ctx.fillText(part, currentX, y);
-                currentX += metrics.width;
-            } else if (part) { // 일반 텍스트
-                ctx.fillStyle = '#FFFFFF';
-                ctx.fillText(part, currentX, y);
-                currentX += ctx.measureText(part).width;
+        const parts = text.split(/(\(.*?\))/g);
+        const segments = parts.map(part => {
+            if (part.startsWith('(') && part.endsWith(')')) {
+                return { text: part.slice(1, -1), highlight: true };
             }
+            return { text: part, highlight: false };
+        }).filter(s => s.text.length > 0);
+
+        let totalWidth = 0;
+        segments.forEach(s => {
+            totalWidth += ctx.measureText(s.text).width;
+        });
+
+        let currentX = x - totalWidth / 2;
+
+        segments.forEach(s => {
+            ctx.fillStyle = s.highlight ? state.highlightColor : '#FFFFFF';
+            
+            ctx.strokeStyle = 'rgba(0,0,0,0.7)';
+            ctx.lineWidth = size * 0.15;
+            ctx.lineJoin = 'round';
+            ctx.strokeText(s.text, currentX, y);
+            
+            ctx.fillText(s.text, currentX, y);
+            currentX += ctx.measureText(s.text).width;
         });
     }
 
