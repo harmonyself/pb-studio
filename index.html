@@ -41,8 +41,13 @@
                         </div>
                     </div>
                     <div class="control">
-                        <label for="bgImage">배경 사진</label>
-                        <input type="file" id="bgImage" accept="image/*">
+                        <label>배경 사진 (3장 합성)</label>
+                        <div class="multi-file-input">
+                            <input type="file" id="bgImage1" accept="image/*" placeholder="배경 1 (좌측)">
+                            <input type="file" id="bgImage2" accept="image/*" placeholder="배경 2 (중앙)">
+                            <input type="file" id="bgImage3" accept="image/*" placeholder="배경 3 (우측)">
+                        </div>
+                        <p class="description" style="margin-top:5px; font-size:0.8rem;">3장을 선택하면 자동으로 자연스럽게 합성됩니다.</p>
                     </div>
                     <div class="control">
                         <button id="aiGenBtn">✨ AI로 배경 생성 (준비중)</button>

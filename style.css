@@ -192,7 +192,18 @@ body {
         font-size: 1.1rem;
     }
 
-    .control-group h2 {
+    .multi-file-input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.multi-file-input input[type="file"] {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+}
+
+.control-group h2 {
         font-size: 1.1rem;
     }
 

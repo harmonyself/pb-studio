@@ -6,7 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // 입력 요소
     const speakerImageInput = document.getElementById('speakerImage');
     const removeSpeakerBgInput = document.getElementById('removeSpeakerBg'); // (옵션, 현재 미구현 UI)
-    const bgImageInput = document.getElementById('bgImage');
+    
+    // 배경 이미지 입력 3개
+    const bgImageInput1 = document.getElementById('bgImage1');
+    const bgImageInput2 = document.getElementById('bgImage2');
+    const bgImageInput3 = document.getElementById('bgImage3');
+    
     const logoImageInput = document.getElementById('logoImage');
     const speakerNameInput = document.getElementById('speakerName');
     const mainText1Input = document.getElementById('mainText1');
@@ -49,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 로딩 오버레이 (배경 제거 시 사용)
     let loadingOverlay = document.getElementById('loading-overlay');
     if (!loadingOverlay) {
-        // ... (existing overlay creation code) ...
+        // 오버레이가 없으면 생성 (안전장치)
         loadingOverlay = document.createElement('div');
         loadingOverlay.id = 'loading-overlay';
         loadingOverlay.style.display = 'none';
@@ -79,10 +84,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 상태 관리 객체 ---
     // 초기값은 캔버스 크기(1280x720)에 맞춰 설정
-
     const state = {
-        speaker: { img: null, x: 640, y: 720, scale: 1 }, // 초기에는 중앙 하단
-        background: { img: null, x: 0, y: 0, scale: 1 },
+        speaker: { img: null, x: 640, y: 720, scale: 1 }, 
+        // 배경 상태 변경: 단일 img -> 3개의 이미지 배열
+        backgrounds: [null, null, null], 
+        background: { x: 0, y: 0, scale: 1 }, // 배경 전체의 위치/크기 조절용 (필요시)
         logo: { img: null, x: 1100, y: 50, scale: 0.8 },
         speakerName: { text: '', x: 640, y: 450, size: 40 },
         mainText1: { text: '', x: 640, y: 550, size: 90 },
@@ -95,14 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // 1. 캔버스 초기화
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // 2. 배경 그리기
-        if (state.background.img) {
-            drawImage(state.background);
-        } else {
-            // 배경이 없으면 검은색 채우기
-            ctx.fillStyle = '#121212';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
+        // 2. 배경 합성 및 그리기
+        drawBlendedBackground();
 
         // 3. 강연자 그리기
         if (state.speaker.img) {
@@ -115,7 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // 5. 텍스트 그리기
-        // 강연자 이름/소속
         drawText(
             state.speakerName.text,
             state.speakerName.x,
@@ -125,7 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
             '500' // Medium weight
         );
 
-        // 강조 문구 1
         drawHighlightedText(
             state.mainText1.text,
             state.mainText1.x,
@@ -133,13 +131,95 @@ document.addEventListener('DOMContentLoaded', () => {
             state.mainText1.size
         );
 
-        // 강조 문구 2
         drawHighlightedText(
             state.mainText2.text,
             state.mainText2.x,
             state.mainText2.y,
             state.mainText2.size
         );
+    }
+
+    /** 3장의 배경 이미지를 자연스럽게 합성하여 그리는 함수 */
+    function drawBlendedBackground() {
+        // 이미지가 하나도 없으면 검은색 배경
+        if (!state.backgrounds[0] && !state.backgrounds[1] && !state.backgrounds[2]) {
+            ctx.fillStyle = '#121212';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            return;
+        }
+
+        const w = canvas.width;
+        const h = canvas.height;
+
+        // 1. 첫 번째 이미지 (좌측) - 기본 베이스로 전체 혹은 좌측 영역
+        if (state.backgrounds[0]) {
+            drawCoverImage(state.backgrounds[0]);
+        }
+        
+        // 2. 두 번째 이미지 (중앙) - 좌우 투명 그라데이션 마스크로 중앙에 합성
+        if (state.backgrounds[1]) {
+            ctx.save();
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = w;
+            tempCanvas.height = h;
+            const tCtx = tempCanvas.getContext('2d');
+            
+            // 이미지 그리기 (Cover 모드)
+            const img = state.backgrounds[1];
+            const scale = Math.max(w / img.width, h / img.height);
+            const x = (w - img.width * scale) / 2;
+            const y = (h - img.height * scale) / 2;
+            tCtx.drawImage(img, x, y, img.width * scale, img.height * scale);
+            
+            // 마스크 적용 (좌우 투명하게)
+            tCtx.globalCompositeOperation = 'destination-in';
+            const grad = tCtx.createLinearGradient(0, 0, w, 0);
+            grad.addColorStop(0, 'rgba(0,0,0,0)');
+            grad.addColorStop(0.2, 'rgba(0,0,0,1)');
+            grad.addColorStop(0.8, 'rgba(0,0,0,1)');
+            grad.addColorStop(1, 'rgba(0,0,0,0)');
+            tCtx.fillStyle = grad;
+            tCtx.fillRect(0, 0, w, h);
+            
+            // 본 캔버스에 합성
+            ctx.drawImage(tempCanvas, 0, 0);
+            ctx.restore();
+        }
+
+        // 3. 세 번째 이미지 (우측) - 좌측 투명 그라데이션 마스크로 우측에 합성
+        if (state.backgrounds[2]) {
+            ctx.save();
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = w;
+            tempCanvas.height = h;
+            const tCtx = tempCanvas.getContext('2d');
+            
+            const img = state.backgrounds[2];
+            const scale = Math.max(w / img.width, h / img.height);
+            const x = (w - img.width * scale) / 2;
+            const y = (h - img.height * scale) / 2;
+            tCtx.drawImage(img, x, y, img.width * scale, img.height * scale);
+            
+            // 마스크 적용 (좌측 투명하게)
+            tCtx.globalCompositeOperation = 'destination-in';
+            const grad = tCtx.createLinearGradient(0, 0, w, 0);
+            grad.addColorStop(0.5, 'rgba(0,0,0,0)');
+            grad.addColorStop(0.8, 'rgba(0,0,0,1)');
+            grad.addColorStop(1, 'rgba(0,0,0,1)');
+            tCtx.fillStyle = grad;
+            tCtx.fillRect(0, 0, w, h);
+            
+            ctx.drawImage(tempCanvas, 0, 0);
+            ctx.restore();
+        }
+    }
+
+    /** 이미지를 화면 꽉 차게 그리는 헬퍼 (Cover 모드) */
+    function drawCoverImage(img) {
+        const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+        const x = (canvas.width - img.width * scale) / 2;
+        const y = (canvas.height - img.height * scale) / 2;
+        ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
     }
 
     // --- 헬퍼 함수들 ---
@@ -150,16 +230,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const w = elementState.img.width * elementState.scale;
         const h = elementState.img.height * elementState.scale;
-        
-        // drawImage(image, x, y, width, height)
-        // x, y는 이미지의 좌상단 좌표라고 가정할 수도 있고, 중앙일 수도 있음.
-        // 기존 컨트롤 로직이 좌상단을 기준으로 하는지 중앙을 기준으로 하는지에 따라 다르지만,
-        // 보통 사용자는 '위치'를 옮길 때 이미지의 '중심'을 생각하는 게 편함.
-        // 하지만 여기서는 기존 로직(좌상단 기준 추정)을 따르되, 
-        // 텍스트는 중앙 정렬이므로 이미지도 중앙 기준 좌표로 처리하는 게 일관성 있음.
-        // --> 직관성을 위해 drawImage는 '중앙' 기준 좌표로 그리는 것으로 통일하겠음.
-        // 하지만 초기값 x=0, y=0 등을 고려할 때, 기존 로직은 좌상단 기준이었을 것임.
-        // 헷갈리지 않게: 슬라이더 값(x, y)을 이미지의 '중심점'으로 해석하여 그림.
         
         ctx.drawImage(
             elementState.img, 
@@ -286,6 +356,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /** 배경 이미지 로드 전용 함수 (배열 인덱스 사용) */
+    function loadBackground(file, index) {
+        if (!file) {
+            state.backgrounds[index] = null;
+            drawCanvas();
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = e => {
+            const img = new Image();
+            img.onload = () => {
+                state.backgrounds[index] = img;
+                drawCanvas();
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
     function loadNormalImage(file, targetState, isSpeaker = false) {
         const reader = new FileReader();
         reader.onload = e => {
@@ -407,7 +496,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 3. 정적 Input 이벤트 리스너 연결
         if (speakerImageInput) speakerImageInput.addEventListener('change', e => loadImage(e.target.files[0], state.speaker, true));
-        if (bgImageInput) bgImageInput.addEventListener('change', e => loadImage(e.target.files[0], state.background));
+        
+        // 배경 이미지 입력 리스너 (3개)
+        if (bgImageInput1) bgImageInput1.addEventListener('change', e => loadBackground(e.target.files[0], 0));
+        if (bgImageInput2) bgImageInput2.addEventListener('change', e => loadBackground(e.target.files[0], 1));
+        if (bgImageInput3) bgImageInput3.addEventListener('change', e => loadBackground(e.target.files[0], 2));
+
         if (logoImageInput) logoImageInput.addEventListener('change', e => loadImage(e.target.files[0], state.logo));
         
         if (speakerNameInput) speakerNameInput.addEventListener('input', e => { state.speakerName.text = e.target.value; drawCanvas(); });
