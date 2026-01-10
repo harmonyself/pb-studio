@@ -7,6 +7,34 @@ const canvas = document.getElementById('thumbnail-canvas');
 const downloadBtn = document.getElementById('download-btn');
 const ctx = canvas.getContext('2d');
 
+const themeToggleBtn = document.getElementById('theme-toggle');
+const sunIcon = document.querySelector('.sun-icon');
+const moonIcon = document.querySelector('.moon-icon');
+const htmlElement = document.documentElement;
+
+// Theme Toggle Logic
+function setTheme(theme) {
+    htmlElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    if (theme === 'dark') {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+    } else {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+    }
+}
+
+// Initial Theme Check
+const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+setTheme(savedTheme);
+
+themeToggleBtn.addEventListener('click', () => {
+    const currentTheme = htmlElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+});
+
 async function generateThumbnail() {
     const [backgroundImg, personImg] = await Promise.all([
         loadImage(backgroundImageInput.files[0]),
@@ -16,6 +44,10 @@ async function generateThumbnail() {
     // Draw background image
     if (backgroundImg) {
         ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+    } else {
+        // Default background if none provided
+        ctx.fillStyle = '#121212';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
     // Draw person image
@@ -39,7 +71,7 @@ async function generateThumbnail() {
         ctx.fillText(text, canvas.width / 2, canvas.height - 100);
     }
 
-    downloadBtn.style.display = 'block';
+    downloadBtn.style.display = 'inline-flex';
 }
 
 function loadImage(file) {
