@@ -131,49 +131,80 @@ body {
 
 /* Mobile Optimization Enhancements */
 @media (max-width: 900px) {
-    .main-content {
-        flex-direction: column-reverse; /* Canvas top, Controls bottom */
-        overflow-y: auto;
-        height: auto; /* Allow full height scrolling */
+    body {
+        overflow-y: auto; /* Ensure body scrolls */
     }
 
+    .app-container {
+        height: auto; /* Remove fixed height constraint */
+        min-height: 100vh;
+        overflow: visible;
+    }
+
+    .main-content {
+        flex-direction: column-reverse; /* Canvas top (visually), Controls bottom (in DOM flow? No, column-reverse puts bottom element on top. 
+                                           Wait, HTML structure is Controls then Canvas. 
+                                           column-reverse puts Canvas (2nd child) on TOP, Controls (1st child) on BOTTOM.
+                                           So Canvas is visually first. Correct. */
+        overflow: visible; /* Remove internal scroll */
+        height: auto;
+    }
+
+    /* Sticky Canvas Section */
+    .canvas-section {
+        position: sticky;
+        top: 0;
+        z-index: 100; /* Stay on top of controls */
+        padding: 0.5rem;
+        min-height: auto;
+        background: var(--bg-color); /* Match bg to hide content behind */
+        border-bottom: 1px solid var(--border-color);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* Shadow for separation */
+    }
+
+    .canvas-wrapper {
+        width: 100%;
+        max-width: 100%;
+        /* Limit height to leave room for controls (e.g., 40% of viewport) */
+        max-height: 40vh; 
+        aspect-ratio: 16 / 9;
+        margin: 0 auto;
+    }
+    
+    /* Controls Panel */
     .controls-panel {
         width: 100%;
         border-right: none;
-        border-top: 1px solid var(--border-color);
-        padding: 1.5rem 1rem; /* Less padding on sides */
-        overflow-y: visible; /* Let the main container scroll */
+        border-top: none; /* Separated by canvas border */
+        padding: 1.5rem 1rem;
+        overflow: visible; /* Scroll with page */
+        background-color: var(--surface-color);
+        /* Add enough bottom padding for scrolling past content */
+        padding-bottom: 50px;
     }
 
-    .canvas-section {
-        padding: 1rem;
-        min-height: auto; /* Let content dictate height */
-        background-attachment: scroll; /* Fix background scrolling issue */
-    }
-    
     .app-header {
         padding: 0.8rem 1rem;
+        /* Let header scroll away naturally */
     }
     
     .app-header h1 {
-        font-size: 1.1rem; /* Smaller title */
+        font-size: 1.1rem;
     }
 
     .control-group h2 {
         font-size: 1.1rem;
     }
 
-    /* Touch-friendly inputs */
     input[type="range"] {
-        height: 24px; /* Taller slider for touch */
+        height: 24px;
     }
     
     input[type="text"], input[type="file"], select, button {
-        padding: 10px; /* Larger touch area */
-        font-size: 16px; /* Prevent iOS zoom on focus */
+        padding: 10px;
+        font-size: 16px;
     }
 
-    /* Info section adjustments */
     .info-section {
         padding: 40px 15px;
     }
