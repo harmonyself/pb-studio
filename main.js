@@ -1,175 +1,197 @@
-const targetThumbnailInput = document.getElementById('target-thumbnail');
-const targetOpacityInput = document.getElementById('target-opacity');
+document.addEventListener('DOMContentLoaded', () => {
+    // --- DOM 요소 참조 ---
+    const canvas = document.getElementById('thumbnailCanvas');
+    const ctx = canvas.getContext('2d');
 
-const backgroundImageInput = document.getElementById('background-image');
+    // 입력 요소
+    const speakerImageInput = document.getElementById('speakerImage');
+    const bgImageInput = document.getElementById('bgImage');
+    const logoImageInput = document.getElementById('logoImage');
+    const speakerNameInput = document.getElementById('speakerName');
+    const mainText1Input = document.getElementById('mainText1');
+    const mainText2Input = document.getElementById('mainText2');
+    const highlightColorInput = document.getElementById('highlightColor');
+    const fineTuneControlsContainer = document.getElementById('fine-tune-controls');
 
-const personImageInput = document.getElementById('person-image');
-const personXInput = document.getElementById('person-x');
-const personYInput = document.getElementById('person-y');
-const personScaleInput = document.getElementById('person-scale');
+    // 버튼
+    const downloadBtn = document.getElementById('downloadBtn');
 
-const copyTextInput = document.getElementById('copy-text');
-const textXInput = document.getElementById('text-x');
-const textYInput = document.getElementById('text-y');
-const textSizeInput = document.getElementById('text-size');
+    // --- 상태 관리 객체 ---
+    const state = {
+        speaker: { img: null, x: 50, y: 150, scale: 1.2 },
+        background: { img: null, x: 0, y: 0, scale: 1 },
+        logo: { img: null, x: 1050, y: 40, scale: 0.8 },
+        speakerName: { text: '', x: 650, y: 450, size: 40 },
+        mainText1: { text: '', x: 650, y: 550, size: 90 },
+        mainText2: { text: '', x: 650, y: 650, size: 90 },
+        highlightColor: '#FFFF00'
+    };
 
-const generateBtn = document.getElementById('generate-btn');
-const canvas = document.getElementById('thumbnail-canvas');
-const downloadBtn = document.getElementById('download-btn');
-const ctx = canvas.getContext('2d');
+    // --- 함수 ---
 
-const themeToggleBtn = document.getElementById('theme-toggle');
-const sunIcon = document.querySelector('.sun-icon');
-const moonIcon = document.querySelector('.moon-icon');
-const htmlElement = document.documentElement;
+    /** 캔버스를 다시 그리는 메인 함수 */
+    function drawCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-// State to store loaded images
-let loadedImages = {
-    target: null,
-    background: null,
-    person: null
-};
-
-// Theme Toggle Logic
-function setTheme(theme) {
-    htmlElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-    if (theme === 'dark') {
-        sunIcon.style.display = 'block';
-        moonIcon.style.display = 'none';
-    } else {
-        sunIcon.style.display = 'none';
-        moonIcon.style.display = 'block';
-    }
-}
-
-// Initial Theme Check
-const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-setTheme(savedTheme);
-
-themeToggleBtn.addEventListener('click', () => {
-    const currentTheme = htmlElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-});
-
-// Image Loading Helper
-function loadImage(file) {
-    return new Promise((resolve, reject) => {
-        if (!file) {
-            resolve(null);
-            return;
+        // 1. 배경 이미지
+        if (state.background.img) {
+            drawImage(state.background);
         }
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => resolve(img);
-            img.onerror = reject;
-            img.src = e.target.result;
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-}
 
-// Handle File Inputs
-targetThumbnailInput.addEventListener('change', async (e) => {
-    loadedImages.target = await loadImage(e.target.files[0]);
-    drawCanvas();
-});
+        // 2. 강연자 이미지
+        if (state.speaker.img) {
+            drawImage(state.speaker);
+        }
 
-backgroundImageInput.addEventListener('change', async (e) => {
-    loadedImages.background = await loadImage(e.target.files[0]);
-    drawCanvas();
-});
+        // 3. 로고 이미지
+        if (state.logo.img) {
+            drawImage(state.logo);
+        }
 
-personImageInput.addEventListener('change', async (e) => {
-    loadedImages.person = await loadImage(e.target.files[0]);
-    drawCanvas();
-});
-
-// Handle Sliders and Text Input
-[targetOpacityInput, personXInput, personYInput, personScaleInput, copyTextInput, textXInput, textYInput, textSizeInput].forEach(input => {
-    input.addEventListener('input', drawCanvas);
-});
-
-function drawCanvas() {
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // 1. Draw Background
-    if (loadedImages.background) {
-        ctx.drawImage(loadedImages.background, 0, 0, canvas.width, canvas.height);
-    } else {
-        ctx.fillStyle = '#121212';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // 4. 텍스트
+        drawText(state.speakerName.text, state.speakerName.x, state.speakerName.y, state.speakerName.size, '#FFFFFF', '500');
+        drawHighlightedText(state.mainText1.text, state.mainText1.x, state.mainText1.y, state.mainText1.size);
+        drawHighlightedText(state.mainText2.text, state.mainText2.x, state.mainText2.y, state.mainText2.size);
     }
 
-    // 2. Draw Person Image
-    if (loadedImages.person) {
-        const x = parseInt(personXInput.value);
-        const y = parseInt(personYInput.value);
-        const scale = parseFloat(personScaleInput.value);
-        
-        const width = loadedImages.person.width * scale;
-        const height = loadedImages.person.height * scale;
-        
-        // Draw centered at X, Y
-        ctx.drawImage(loadedImages.person, x - width / 2, y - height / 2, width, height);
+    /** 이미지를 캔버스에 그리는 함수 */
+    function drawImage(element) {
+        const { img, x, y, scale } = element;
+        if (!img) return;
+        const w = img.width * scale;
+        const h = img.height * scale;
+        ctx.drawImage(img, x, y, w, h);
     }
-
-    // 3. Draw Text
-    const text = copyTextInput.value;
-    if (text) {
-        const x = parseInt(textXInput.value);
-        const y = parseInt(textYInput.value);
-        const size = parseInt(textSizeInput.value);
-
-        ctx.fillStyle = 'white';
-        ctx.strokeStyle = 'black';
-        ctx.lineWidth = size * 0.08; // Proportional outline
-        ctx.font = `bold ${size}px Arial`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        
-        ctx.strokeText(text, x, y);
+    
+    /** 기본 텍스트를 캔버스에 그리는 함수 */
+    function drawText(text, x, y, size, color, weight) {
+        ctx.font = `${weight} ${size}px Pretendard, sans-serif`;
+        ctx.fillStyle = color;
         ctx.fillText(text, x, y);
     }
 
-    // 4. Draw Target Thumbnail (Overlay)
-    if (loadedImages.target) {
-        ctx.save();
-        ctx.globalAlpha = parseFloat(targetOpacityInput.value);
-        ctx.drawImage(loadedImages.target, 0, 0, canvas.width, canvas.height);
-        ctx.restore();
+    /** 강조 태그가 포함된 텍스트를 그리는 함수 */
+    function drawHighlightedText(text, x, y, size) {
+        const highlightRegex = /\(강조\)(.*?)/g;
+        const parts = text.split(highlightRegex);
+
+        ctx.font = `900 ${size}px Pretendard, sans-serif`;
+        let currentX = x;
+
+        parts.forEach((part, index) => {
+            if (index % 3 === 2) { // 강조 텍스트
+                const metrics = ctx.measureText(part);
+                ctx.fillStyle = state.highlightColor;
+                ctx.fillRect(currentX - 5, y - size, metrics.width + 10, size + 10);
+                ctx.fillStyle = '#000000';
+                ctx.fillText(part, currentX, y);
+                currentX += metrics.width;
+            } else if (part) { // 일반 텍스트
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillText(part, currentX, y);
+                currentX += ctx.measureText(part).width;
+            }
+        });
     }
 
-    // Update download button visibility
-    downloadBtn.style.display = 'inline-flex';
-}
+    /** 파일 입력으로부터 이미지를 로드하는 함수 */
+    function loadImage(file, targetState) {
+        if (!file) {
+            targetState.img = null;
+            drawCanvas();
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = e => {
+            const img = new Image();
+            img.onload = () => {
+                targetState.img = img;
+                drawCanvas();
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
 
-function downloadThumbnail() {
-    // Temporarily hide the overlay for the final download
-    // or let the user decide. Usually, we want to download WITHOUT the guide if opacity is low, 
-    // or MAYBE the user wants it.
-    // Let's assume for "Production" we might want to hide the overlay if opacity < 1?
-    // For now, WYSIWYG (What You See Is What You Get). 
-    // But logically, if it's a "Guide", you don't want it in the final image.
-    
-    // Quick re-draw without overlay for download
-    const currentOpacity = targetOpacityInput.value;
-    targetOpacityInput.value = 0; // Hide overlay
-    drawCanvas();
-    
-    const link = document.createElement('a');
-    link.download = 'youtube_thumbnail.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+    /** 정밀 조정 UI를 생성하는 함수 */
+    function createFineTuneControls(elementName, elementState) {
+        const container = document.createElement('div');
+        container.className = 'fine-tune-control';
+        
+        const title = document.createElement('h3');
+        title.textContent = elementName;
+        container.appendChild(title);
 
-    // Restore overlay
-    targetOpacityInput.value = currentOpacity;
-    drawCanvas();
-}
+        // X, Y, Scale 슬라이더 생성
+        ['x', 'y', 'scale', 'size'].forEach(prop => {
+            if (elementState[prop] === undefined) return;
 
-generateBtn.addEventListener('click', drawCanvas); // Keep for compatibility/explicit action
-downloadBtn.addEventListener('click', downloadThumbnail);
+            const isScale = prop === 'scale';
+            const isSize = prop === 'size';
+            const max = isScale ? 3 : (isSize ? 150 : canvas.width);
+            const min = isScale ? 0.1 : (isSize? 10 : -200);
+            const step = isScale ? 0.01 : 1;
+            
+            const sliderContainer = document.createElement('div');
+            sliderContainer.className = 'slider-control';
+            
+            const label = document.createElement('label');
+            label.textContent = prop.toUpperCase();
+            
+            const slider = document.createElement('input');
+            slider.type = 'range';
+            slider.min = min;
+            slider.max = max;
+            slider.step = step;
+            slider.value = elementState[prop];
+
+            slider.addEventListener('input', (e) => {
+                elementState[prop] = parseFloat(e.target.value);
+                drawCanvas();
+            });
+
+            sliderContainer.append(label, slider);
+            container.appendChild(sliderContainer);
+        });
+
+        return container;
+    }
+
+    /** 모든 컨트롤 UI를 초기화하는 함수 */
+    function init() {
+        // 초기 텍스트 상태 업데이트
+        state.speakerName.text = speakerNameInput.value;
+        state.mainText1.text = mainText1Input.value;
+        state.mainText2.text = mainText2Input.value;
+
+        // 정밀 조정 UI 생성 및 추가
+        fineTuneControlsContainer.appendChild(createFineTuneControls('강연자', state.speaker));
+        fineTuneControlsContainer.appendChild(createFineTuneControls('로고', state.logo));
+        fineTuneControlsContainer.appendChild(createFineTuneControls('이름/소속', state.speakerName));
+        fineTuneControlsContainer.appendChild(createFineTuneControls('강조문구1', state.mainText1));
+        fineTuneControlsContainer.appendChild(createFineTuneControls('강조문구2', state.mainText2));
+        
+        // 이벤트 리스너 연결
+        speakerImageInput.addEventListener('change', e => loadImage(e.target.files[0], state.speaker));
+        bgImageInput.addEventListener('change', e => loadImage(e.target.files[0], state.background));
+        logoImageInput.addEventListener('change', e => loadImage(e.target.files[0], state.logo));
+
+        speakerNameInput.addEventListener('input', e => { state.speakerName.text = e.target.value; drawCanvas(); });
+        mainText1Input.addEventListener('input', e => { state.mainText1.text = e.target.value; drawCanvas(); });
+        mainText2Input.addEventListener('input', e => { state.mainText2.text = e.target.value; drawCanvas(); });
+        highlightColorInput.addEventListener('input', e => { state.highlightColor = e.target.value; drawCanvas(); });
+
+        downloadBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = 'thumbnail.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+        
+        // 초기 캔버스 그리기
+        drawCanvas();
+    }
+
+    // --- 실행 ---
+    init();
+});
