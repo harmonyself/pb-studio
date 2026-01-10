@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 입력 요소
     const speakerImageInput = document.getElementById('speakerImage');
-    const removeSpeakerBgInput = document.getElementById('removeSpeakerBg');
+    const removeSpeakerBgInput = document.getElementById('removeSpeakerBg'); // (옵션, 현재 미구현 UI)
     const bgImageInput = document.getElementById('bgImage');
     const logoImageInput = document.getElementById('logoImage');
     const speakerNameInput = document.getElementById('speakerName');
@@ -16,110 +16,245 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 버튼
     const downloadBtn = document.getElementById('downloadBtn');
+    
+    // 로딩 오버레이 (배경 제거 시 사용)
+    let loadingOverlay = document.getElementById('loading-overlay');
+    if (!loadingOverlay) {
+        // 오버레이가 없으면 생성 (안전장치)
+        loadingOverlay = document.createElement('div');
+        loadingOverlay.id = 'loading-overlay';
+        loadingOverlay.style.display = 'none';
+        loadingOverlay.innerHTML = `
+            <div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;flex-direction:column;justify-content:center;align-items:center;color:white;">
+                <div class="spinner" style="width:50px;height:50px;border:5px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 1s infinite linear;margin-bottom:20px;"></div>
+                <p>배경 제거 처리 중...</p>
+                <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+            </div>
+        `;
+        document.body.appendChild(loadingOverlay);
+    }
 
     // --- 상태 관리 객체 ---
+    // 초기값은 캔버스 크기(1280x720)에 맞춰 설정
     const state = {
-        speaker: { img: null, x: 50, y: 150, scale: 1.2, removeBg: false },
+        speaker: { img: null, x: 640, y: 720, scale: 1 }, // 초기에는 중앙 하단
         background: { img: null, x: 0, y: 0, scale: 1 },
-        logo: { img: null, x: 1050, y: 40, scale: 0.8 },
-        speakerName: { text: '', x: 650, y: 450, size: 40 },
-        mainText1: { text: '', x: 650, y: 550, size: 90 },
-        mainText2: { text: '', x: 650, y: 650, size: 90 },
+        logo: { img: null, x: 1100, y: 50, scale: 0.8 },
+        speakerName: { text: '', x: 640, y: 450, size: 40 },
+        mainText1: { text: '', x: 640, y: 550, size: 90 },
+        mainText2: { text: '', x: 640, y: 650, size: 90 },
         highlightColor: '#FFFF00'
     };
 
-    // --- 함수 ---
-
-    /** 캔버스를 다시 그리는 메인 함수 */
+    // --- 메인 그리기 함수 ---
     function drawCanvas() {
+        // 1. 캔버스 초기화
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.font = '16px Pretendard'; // 폰트 로딩을 위한 기본 설정
 
-        // 1. 배경 이미지
-        if (state.background.img) drawImage(state.background);
+        // 2. 배경 그리기
+        if (state.background.img) {
+            drawImage(state.background);
+        } else {
+            // 배경이 없으면 검은색 채우기
+            ctx.fillStyle = '#121212';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
 
-        // 2. 강연자 이미지
-        if (state.speaker.img) drawImage(state.speaker);
+        // 3. 강연자 그리기
+        if (state.speaker.img) {
+            drawImage(state.speaker);
+        }
 
-        // 3. 로고 이미지
-        if (state.logo.img) drawImage(state.logo);
+        // 4. 로고 그리기
+        if (state.logo.img) {
+            drawImage(state.logo);
+        }
 
-        // 4. 텍스트
-        drawText(state.speakerName.text, state.speakerName.x, state.speakerName.y, state.speakerName.size, '#FFFFFF', '500');
-        drawHighlightedText(state.mainText1.text, state.mainText1.x, state.mainText1.y, state.mainText1.size);
-        drawHighlightedText(state.mainText2.text, state.mainText2.x, state.mainText2.y, state.mainText2.size);
+        // 5. 텍스트 그리기
+        // 강연자 이름/소속
+        drawText(
+            state.speakerName.text,
+            state.speakerName.x,
+            state.speakerName.y,
+            state.speakerName.size,
+            '#FFFFFF',
+            '500' // Medium weight
+        );
+
+        // 강조 문구 1
+        drawHighlightedText(
+            state.mainText1.text,
+            state.mainText1.x,
+            state.mainText1.y,
+            state.mainText1.size
+        );
+
+        // 강조 문구 2
+        drawHighlightedText(
+            state.mainText2.text,
+            state.mainText2.x,
+            state.mainText2.y,
+            state.mainText2.size
+        );
     }
 
-    /** 이미지를 캔버스에 그리는 함수 */
-    function drawImage(element) {
-        const { img, x, y, scale } = element;
-        if (!img) return;
-        const w = img.width * scale;
-        const h = img.height * scale;
-        ctx.drawImage(img, x, y, w, h);
+    // --- 헬퍼 함수들 ---
+
+    /** 이미지를 상태값에 따라 그리는 함수 */
+    function drawImage(elementState) {
+        if (!elementState.img) return;
+        
+        const w = elementState.img.width * elementState.scale;
+        const h = elementState.img.height * elementState.scale;
+        
+        // drawImage(image, x, y, width, height)
+        // x, y는 이미지의 좌상단 좌표라고 가정할 수도 있고, 중앙일 수도 있음.
+        // 기존 컨트롤 로직이 좌상단을 기준으로 하는지 중앙을 기준으로 하는지에 따라 다르지만,
+        // 보통 사용자는 '위치'를 옮길 때 이미지의 '중심'을 생각하는 게 편함.
+        // 하지만 여기서는 기존 로직(좌상단 기준 추정)을 따르되, 
+        // 텍스트는 중앙 정렬이므로 이미지도 중앙 기준 좌표로 처리하는 게 일관성 있음.
+        // --> 직관성을 위해 drawImage는 '중앙' 기준 좌표로 그리는 것으로 통일하겠음.
+        // 하지만 초기값 x=0, y=0 등을 고려할 때, 기존 로직은 좌상단 기준이었을 것임.
+        // 헷갈리지 않게: 슬라이더 값(x, y)을 이미지의 '중심점'으로 해석하여 그림.
+        
+        ctx.drawImage(
+            elementState.img, 
+            elementState.x - w / 2, 
+            elementState.y - h / 2, 
+            w, 
+            h
+        );
     }
-    
-    /** 기본 텍스트를 캔버스에 그리는 함수 */
+
+    /** 일반 텍스트 그리기 (중앙 정렬, 외곽선 포함) */
     function drawText(text, x, y, size, color, weight) {
+        if (!text) return;
         ctx.font = `${weight} ${size}px Pretendard, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        // 외곽선
+        ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+        ctx.lineWidth = size * 0.1;
+        ctx.lineJoin = 'round';
+        ctx.strokeText(text, x, y);
+        
+        // 채우기
         ctx.fillStyle = color;
-        ctx.textBaseline = 'alphabetic';
         ctx.fillText(text, x, y);
     }
 
-    /** 강조 태그가 포함된 텍스트를 그리는 함수 (버그 수정) */
+    /** 강조 텍스트 그리기 (괄호 안의 글자색 변경) */
     function drawHighlightedText(text, x, y, size) {
-        ctx.font = `900 ${size}px Pretendard, sans-serif`;
-        ctx.textBaseline = 'alphabetic';
+        if (!text) return;
 
-        const highlightRegex = /\(강조\)([^()]+)/g;
-        let currentX = x;
-        let lastIndex = 0;
-        let match;
+        ctx.font = `900 ${size}px Pretendard, sans-serif`; // ExtraBold
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'left'; // 부분별로 그려야 하므로 left 정렬 사용
 
-        while ((match = highlightRegex.exec(text)) !== null) {
-            const before = text.substring(lastIndex, match.index);
-            const content = match[1];
+        // 1. 텍스트 파싱: (문구) 패턴 분리
+        // 예: "최고의 (기술) 입니다" -> ["최고의 ", "(기술)", " 입니다"]
+        const parts = text.split(/(\([^)]+\))/g);
+        
+        // 2. 전체 너비 계산 (중앙 정렬을 위해)
+        let totalWidth = 0;
+        const segments = parts.map(part => {
+            let content = part;
+            let isHighlight = false;
+            
+            if (part.startsWith('(') && part.endsWith(')')) {
+                content = part.slice(1, -1); // 괄호 제거
+                isHighlight = true;
+            }
+            
+            if (content === '') return null; // 빈 문자열 무시
 
-            // 1. 강조 아닌 텍스트 그리기
-            ctx.fillStyle = '#FFFFFF';
-            ctx.fillText(before, currentX, y);
-            currentX += ctx.measureText(before).width;
+            const width = ctx.measureText(content).width;
+            totalWidth += width;
+            
+            return { text: content, highlight: isHighlight, width: width };
+        }).filter(s => s !== null);
 
-            // 2. 강조 텍스트 그리기
-            const metrics = ctx.measureText(content);
-            ctx.fillStyle = state.highlightColor;
-            ctx.fillRect(currentX - 5, y - size + 5, metrics.width + 10, size + 10);
-            ctx.fillStyle = '#000000';
-            ctx.fillText(content, currentX, y);
-            currentX += metrics.width;
+        // 3. 그리기 시작 위치 (중앙 정렬 보정)
+        let currentX = x - (totalWidth / 2);
 
-            lastIndex = highlightRegex.lastIndex;
-        }
+        // 4. 각 세그먼트 그리기
+        segments.forEach(segment => {
+            // 외곽선
+            ctx.strokeStyle = 'rgba(0,0,0,0.8)';
+            ctx.lineWidth = size * 0.12;
+            ctx.lineJoin = 'round';
+            ctx.strokeText(segment.text, currentX, y);
+            
+            // 글자색
+            ctx.fillStyle = segment.highlight ? state.highlightColor : '#FFFFFF';
+            ctx.fillText(segment.text, currentX, y);
 
-        // 3. 마지막 매치 후 남은 텍스트 그리기
-        const remaining = text.substring(lastIndex);
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillText(remaining, currentX, y);
+            // 다음 글자 위치로 이동
+            currentX += segment.width;
+        });
     }
 
-    /** 파일 입력으로부터 이미지를 로드하는 함수 */
-    function loadImage(file, targetState) {
-        if (!file) {
-            targetState.img = null;
-            drawCanvas();
-            return;
-        }
-        if (targetState.removeBg) {
-            console.log('배경 제거 기능은 현재 준비 중입니다. 원본 이미지를 로드합니다.');
-            // 나중에 여기에 배경 제거 API 호출 로직 추가
-        }
+    /** 파일 로드 및 이미지 설정 */
+    function loadImage(file, targetState, isSpeaker = false) {
+        if (!file) return;
 
+        if (isSpeaker) {
+            // 강연자 사진: 배경 제거 시도
+            const loadingOverlay = document.getElementById('loading-overlay');
+            if (loadingOverlay) loadingOverlay.style.display = 'flex'; // 구형 브라우저 호환
+
+            // @imgly/background-removal 전역 함수 체크
+            if (window.imglyRemoveBackground) {
+                imglyRemoveBackground(file).then(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const img = new Image();
+                    img.onload = () => {
+                        targetState.img = img;
+                        // 스마트 크롭: 화면 중앙 하단에 배치
+                        // 이미지 높이가 화면의 70% 정도 되게 스케일링
+                        const targetScale = (canvas.height * 0.7) / img.height;
+                        targetState.scale = targetScale;
+                        targetState.x = canvas.width / 2;
+                        // 하단에 딱 붙게 (중심점 기준이므로 높이의 절반을 뺌)
+                        targetState.y = canvas.height - (img.height * targetScale / 2) + 50; 
+                        
+                        if (loadingOverlay) loadingOverlay.style.display = 'none';
+                        updateSliders('강연자'); // 슬라이더 UI 동기화
+                        drawCanvas();
+                    };
+                    img.src = url;
+                }).catch(err => {
+                    console.error("배경 제거 실패:", err);
+                    alert("배경 제거에 실패하여 원본 이미지를 사용합니다.");
+                    if (loadingOverlay) loadingOverlay.style.display = 'none';
+                    loadNormalImage(file, targetState, true);
+                });
+            } else {
+                // 라이브러리 로드 안됨
+                console.warn("배경 제거 라이브러리가 로드되지 않았습니다.");
+                if (loadingOverlay) loadingOverlay.style.display = 'none';
+                loadNormalImage(file, targetState, true);
+            }
+        } else {
+            // 일반 이미지 로드
+            loadNormalImage(file, targetState);
+        }
+    }
+
+    function loadNormalImage(file, targetState, isSpeaker = false) {
         const reader = new FileReader();
         reader.onload = e => {
             const img = new Image();
             img.onload = () => {
                 targetState.img = img;
+                if (isSpeaker) {
+                    // 강연자 기본 배치 (배경 제거 실패 시에도)
+                    targetState.scale = (canvas.height * 0.7) / img.height;
+                    targetState.x = canvas.width / 2;
+                    targetState.y = canvas.height - (img.height * targetState.scale / 2);
+                    updateSliders('강연자');
+                }
                 drawCanvas();
             };
             img.src = e.target.result;
@@ -127,75 +262,130 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.readAsDataURL(file);
     }
 
-    /** 정밀 조정 UI를 생성하는 함수 */
-    function createFineTuneControls(elementName, elementState) {
-        const container = document.createElement('div');
-        container.className = 'fine-tune-control';
-        const title = document.createElement('h3');
-        title.textContent = elementName;
-        container.appendChild(title);
+    // --- 정밀 조정 UI ---
+    
+    // UI 컨트롤 그룹 매핑 (이름 -> 상태 객체)
+    const controlsMap = {
+        '강연자': state.speaker,
+        '로고': state.logo,
+        '이름/소속': state.speakerName,
+        '강조문구1': state.mainText1,
+        '강조문구2': state.mainText2
+    };
+
+    /** 컨트롤 생성 함수 */
+    function createFineTuneControls(name, elementState) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'fine-tune-group';
+        wrapper.style.marginBottom = '20px';
+        wrapper.style.padding = '10px';
+        wrapper.style.background = 'rgba(255,255,255,0.05)';
+        wrapper.style.borderRadius = '8px';
+
+        const title = document.createElement('h4');
+        title.textContent = name;
+        title.style.margin = '0 0 10px 0';
+        title.style.fontSize = '14px';
+        title.style.color = '#ddd';
+        wrapper.appendChild(title);
 
         ['x', 'y', 'scale', 'size'].forEach(prop => {
             if (elementState[prop] === undefined) return;
-            const isScale = prop === 'scale';
-            const isSize = prop === 'size';
-            const max = isScale ? 3 : (isSize ? 150 : canvas.width);
-            const min = isScale ? 0.1 : (isSize ? 10 : -canvas.width);
-            const step = isScale ? 0.01 : 1;
-            const sliderContainer = document.createElement('div');
-            sliderContainer.className = 'slider-control';
+
+            const row = document.createElement('div');
+            row.style.display = 'flex';
+            row.style.alignItems = 'center';
+            row.style.marginBottom = '5px';
+
             const label = document.createElement('label');
             label.textContent = prop.toUpperCase();
+            label.style.width = '50px';
+            label.style.fontSize = '12px';
+
             const slider = document.createElement('input');
             slider.type = 'range';
-            slider.min = min; slider.max = max; slider.step = step; slider.value = elementState[prop];
+            slider.style.flex = '1';
+            
+            // 슬라이더 범위 설정
+            if (prop === 'scale') {
+                slider.min = 0.1; slider.max = 3.0; slider.step = 0.01;
+            } else if (prop === 'size') {
+                slider.min = 10; slider.max = 300; slider.step = 1;
+            } else { // x, y
+                slider.min = -500; slider.max = 2000; slider.step = 1;
+            }
+            
+            slider.value = elementState[prop];
+            slider.dataset.group = name; // 식별용 데이터 속성
+            slider.dataset.prop = prop;
+
+            // 이벤트 리스너: 슬라이더 조작 시 상태 업데이트 및 다시 그리기
             slider.addEventListener('input', (e) => {
                 elementState[prop] = parseFloat(e.target.value);
                 drawCanvas();
             });
-            sliderContainer.append(label, slider);
-            container.appendChild(sliderContainer);
+
+            row.appendChild(label);
+            row.appendChild(slider);
+            wrapper.appendChild(row);
         });
-        return container;
+
+        return wrapper;
     }
 
-    /** 모든 컨트롤 UI를 초기화하는 함수 */
+    /** 특정 그룹의 슬라이더 값을 현재 state 값으로 업데이트 (자동 배치 후 호출) */
+    function updateSliders(groupName) {
+        const sliders = fineTuneControlsContainer.querySelectorAll(`input[data-group="${groupName}"]`);
+        const elementState = controlsMap[groupName];
+        if (!elementState) return;
+
+        sliders.forEach(slider => {
+            const prop = slider.dataset.prop;
+            if (elementState[prop] !== undefined) {
+                slider.value = elementState[prop];
+            }
+        });
+    }
+
+    // --- 초기화 및 실행 ---
     function init() {
-        // 초기 텍스트 상태 업데이트
-        state.speakerName.text = speakerNameInput.value;
-        state.mainText1.text = mainText1Input.value;
-        state.mainText2.text = mainText2Input.value;
+        // 1. 상태값 초기화 (input 값과 동기화)
+        if (speakerNameInput) state.speakerName.text = speakerNameInput.value;
+        if (mainText1Input) state.mainText1.text = mainText1Input.value;
+        if (mainText2Input) state.mainText2.text = mainText2Input.value;
+        if (highlightColorInput) state.highlightColor = highlightColorInput.value;
 
-        // 정밀 조정 UI 생성
-        fineTuneControlsContainer.appendChild(createFineTuneControls('강연자', state.speaker));
-        fineTuneControlsContainer.appendChild(createFineTuneControls('로고', state.logo));
-        fineTuneControlsContainer.appendChild(createFineTuneControls('이름/소속', state.speakerName));
-        fineTuneControlsContainer.appendChild(createFineTuneControls('강조문구1', state.mainText1));
-        fineTuneControlsContainer.appendChild(createFineTuneControls('강조문구2', state.mainText2));
+        // 2. 정밀 조정 UI 생성
+        fineTuneControlsContainer.innerHTML = ''; // 초기화
+        for (const [name, elementState] of Object.entries(controlsMap)) {
+            fineTuneControlsContainer.appendChild(createFineTuneControls(name, elementState));
+        }
+
+        // 3. 정적 Input 이벤트 리스너 연결
+        if (speakerImageInput) speakerImageInput.addEventListener('change', e => loadImage(e.target.files[0], state.speaker, true));
+        if (bgImageInput) bgImageInput.addEventListener('change', e => loadImage(e.target.files[0], state.background));
+        if (logoImageInput) logoImageInput.addEventListener('change', e => loadImage(e.target.files[0], state.logo));
         
-        // 이벤트 리스너 연결
-        removeSpeakerBgInput.addEventListener('change', e => { 
-            state.speaker.removeBg = e.target.checked;
-            if(e.target.checked) alert('배경 제거 기능은 현재 준비 중입니다. 외부 프로그램을 이용해 PNG 파일을 올려주세요.');
+        if (speakerNameInput) speakerNameInput.addEventListener('input', e => { state.speakerName.text = e.target.value; drawCanvas(); });
+        if (mainText1Input) mainText1Input.addEventListener('input', e => { state.mainText1.text = e.target.value; drawCanvas(); });
+        if (mainText2Input) mainText2Input.addEventListener('input', e => { state.mainText2.text = e.target.value; drawCanvas(); });
+        if (highlightColorInput) highlightColorInput.addEventListener('input', e => { state.highlightColor = e.target.value; drawCanvas(); });
+
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', () => {
+                const link = document.createElement('a');
+                link.download = 'thumbnail.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+
+        // 4. 초기 그리기
+        // 폰트 로딩 대기 후 그리기
+        document.fonts.ready.then(() => {
+            drawCanvas();
         });
-        speakerImageInput.addEventListener('change', e => loadImage(e.target.files[0], state.speaker));
-        bgImageInput.addEventListener('change', e => loadImage(e.target.files[0], state.background));
-        logoImageInput.addEventListener('change', e => loadImage(e.target.files[0], state.logo));
-        speakerNameInput.addEventListener('input', e => { state.speakerName.text = e.target.value; drawCanvas(); });
-        mainText1Input.addEventListener('input', e => { state.mainText1.text = e.target.value; drawCanvas(); });
-        mainText2Input.addEventListener('input', e => { state.mainText2.text = e.target.value; drawCanvas(); });
-        highlightColorInput.addEventListener('input', e => { state.highlightColor = e.target.value; drawCanvas(); });
-        downloadBtn.addEventListener('click', () => {
-            const link = document.createElement('a');
-            link.download = 'thumbnail.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        });
-        
-        // 폰트가 로드될 시간을 준 후 초기 캔버스 그리기
-        setTimeout(drawCanvas, 100); 
     }
 
-    // --- 실행 ---
     init();
 });
