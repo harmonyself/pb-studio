@@ -1,14 +1,45 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>유튜브 썸네일 제작 서비스</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
+    <header>
+        <h1>유튜브 썸네일 제작 서비스</h1>
+        <p>타겟 썸네일과 동일한 패턴의 썸네일을 생성해 보세요.</p>
+    </header>
+    <main>
+        <div class="container">
+            <div class="input-section">
+                <h2>썸네일 정보 입력</h2>
+                <div class="input-group">
+                    <label for="target-thumbnail">타겟 썸네일</label>
+                    <input type="file" id="target-thumbnail" accept="image/*">
+                </div>
+                <div class="input-group">
+                    <label for="background-image">배경 사진</label>
+                    <input type="file" id="background-image" accept="image/*">
+                </div>
+                <div class="input-group">
+                    <label for="person-image">인물 사진</label>
+                    <input type="file" id="person-image" accept="image/*">
+                </div>
+                <div class="input-group">
+                    <label for="copy-text">카피 문구</label>
+                    <input type="text" id="copy-text" placeholder="썸네일에 들어갈 문구를 입력하세요">
+                </div>
+                <button id="generate-btn">썸네일 생성</button>
+            </div>
+            <div class="output-section">
+                <h2>생성된 썸네일</h2>
+                <canvas id="thumbnail-canvas" width="1280" height="720"></canvas>
+                <a id="download-btn" class="button" style="display:none;">썸네일 다운로드</a>
+            </div>
+        </div>
+    </main>
+    <script src="main.js"></script>
 </body>
 </html>
