@@ -320,8 +320,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 1. 라이브러리 존재 여부 확인
             if (typeof imglyRemoveBackground !== 'undefined') {
+                const config = {
+                    publicPath: 'https://cdn.jsdelivr.net/npm/@imgly/background-removal-data@1.0.3/dist/',
+                    // device: 'cpu', // GPU 문제 시 CPU 강제 (필요시 주석 해제)
+                    progress: (key, current, total) => {
+                        const percent = Math.round((current / total) * 100);
+                        updateLoadingText(`AI 모델 다운로드/처리 중: ${percent}%`);
+                    }
+                };
+
                 // 2. 배경 제거 실행
-                imglyRemoveBackground(file).then(blob => {
+                imglyRemoveBackground(file, config).then(blob => {
                     const url = URL.createObjectURL(blob);
                     const img = new Image();
                     img.onload = () => {
@@ -341,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }).catch(err => {
                     // 3. 실패 시 원본 사용 (Fallback)
                     console.error("배경 제거 실패 (원본 사용):", err);
-                    alert("배경 제거에 실패했습니다. 원본 이미지를 사용합니다.");
+                    alert("배경 제거 처리에 실패했습니다. (브라우저 호환성 또는 네트워크 문제)\n원본 이미지를 사용합니다.");
                     if (overlay) overlay.style.display = 'none';
                     loadNormalImage(file, targetState, true);
                 });
