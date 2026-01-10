@@ -1,72 +1,94 @@
 :root {
     --bg-color: #121212;
     --surface-color: #1e1e1e;
-    --primary-text-color: #ffffff;
-    --secondary-text-color: #aaaaaa;
     --border-color: #333;
+    --primary-text-color: #e0e0e0;
+    --secondary-text-color: #aaaaaa;
     --accent-color: #ff0000;
     --highlight-bg: #2a2a2a;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Pretendard', sans-serif;
     background-color: var(--bg-color);
     color: var(--primary-text-color);
-    font-size: 16px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto; /* 전체 페이지 스크롤 허용 (긴 콘텐츠 대비) */
+}
+
+/* Scrollbar Style */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 .app-container {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    flex: 1; /* 콘텐츠가 적어도 화면을 채우도록 */
+    min-height: 100vh;
 }
 
 .app-header {
-    padding: 1rem 1.5rem;
     background-color: var(--surface-color);
     border-bottom: 1px solid var(--border-color);
+    padding: 1rem 2rem;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
 }
 
 .app-header h1 {
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
 }
 
 .main-content {
     display: flex;
-    flex-grow: 1;
+    flex: 1;
     overflow: hidden;
 }
 
+/* Controls Panel */
 .controls-panel {
     width: 380px;
-    padding: 1.5rem;
     background-color: var(--surface-color);
     border-right: 1px solid var(--border-color);
+    padding: 1.5rem;
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
+    flex-shrink: 0;
+}
+
+.control-group {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.control-group:last-child {
+    border-bottom: none;
 }
 
 .control-group h2 {
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: 1.2rem;
     margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border-color);
+    color: var(--primary-text-color);
 }
 
 .control {
@@ -75,26 +97,24 @@ body {
 
 .control label {
     display: block;
-    font-size: 0.9rem;
     margin-bottom: 0.5rem;
+    font-size: 0.9rem;
     color: var(--secondary-text-color);
 }
 
-input[type="text"],
-input[type="file"] {
+input[type="text"], input[type="file"], select {
     width: 100%;
-    padding: 0.6rem;
+    padding: 0.8rem;
     background-color: var(--bg-color);
     border: 1px solid var(--border-color);
-    border-radius: 4px;
     color: var(--primary-text-color);
-    font-size: 1rem;
+    border-radius: 4px;
 }
 
 input[type="file"]::file-selector-button {
-    background-color: var(--secondary-text-color);
-    color: var(--bg-color);
-    border: none;
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #555;
     padding: 0.4rem 0.8rem;
     border-radius: 4px;
     cursor: pointer;
@@ -193,17 +213,114 @@ input[type="range"] {
 .canvas-wrapper {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     border: 1px solid var(--border-color);
+    max-width: 100%; /* 반응형 대비 */
 }
 
 #thumbnailCanvas {
     display: block;
-    width: 100%;
-    max-width: 800px;
+    max-width: 100%;
     height: auto;
 }
 
 .download-wrapper {
-    margin-top: 1.5rem;
-    width: 100%;
-    max-width: 800px;
+    margin-top: 2rem;
+    width: 300px;
+}
+
+/* Info Section (SEO & Content) */
+.info-section {
+    background-color: #f9f9f9;
+    padding: 60px 20px;
+    border-top: 1px solid #e5e5e5;
+    color: #333;
+}
+
+.info-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.info-section article {
+    margin-bottom: 40px;
+}
+
+.info-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #111;
+    border-left: 5px solid #065fd4; /* YouTube Blue accent */
+    padding-left: 15px;
+}
+
+.info-section p, .info-section li, .info-section dd {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #555;
+}
+
+.info-section ul, .info-section ol {
+    margin-left: 20px;
+    margin-bottom: 15px;
+}
+
+.info-section li {
+    margin-bottom: 8px;
+}
+
+.info-section dt {
+    font-weight: 700;
+    margin-top: 15px;
+    color: #333;
+}
+
+.info-section dd {
+    margin-left: 0;
+    margin-bottom: 10px;
+}
+
+/* Footer */
+.site-footer {
+    background-color: #1f1f1f;
+    color: #aaa;
+    padding: 30px 20px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.footer-content nav {
+    margin-top: 10px;
+}
+
+.footer-content a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 10px;
+    transition: color 0.3s;
+}
+
+.footer-content a:hover {
+    color: #3ea6ff;
+    text-decoration: underline;
+}
+
+/* Dark Mode Support for new sections (if global dark theme is on) */
+/* Assuming the root variables set dark mode, we just ensure readability */
+/* However, info-section forces light bg by default for readability contrast, 
+   but if we want full dark mode consistency: */
+
+@media (prefers-color-scheme: dark) {
+    .info-section {
+        background-color: #121212;
+        color: #e0e0e0;
+        border-top: 1px solid #333;
+    }
+    .info-section h2 {
+        color: #fff;
+    }
+    .info-section p, .info-section li, .info-section dd {
+        color: #bbb;
+    }
+    .info-section dt {
+        color: #e0e0e0;
+    }
 }
