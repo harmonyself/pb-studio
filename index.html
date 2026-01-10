@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>꿈의 그라운드 경남 | 썸네일 생성기</title>
+    <title>유튜브 썸네일 제작 서비스</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" href="https://www.gyeongnam.go.kr/favicon.ico" type="image/x-icon">
+    <!-- Background Removal Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.0.4/dist/imgly-background-removal.min.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <header class="app-header">
+    <div id="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>배경 제거 및 이미지 처리 중...<br>(첫 실행 시 모델 다운로드로 시간이 걸릴 수 있습니다)</p>
+    </div>
+    <header class="yt-header">
             <h1><img src="https://www.gyeongnam.go.kr/site/gyeongnam/images/common/logo_black.png" alt="경상남도 로고" height="24"> 꿈의 그라운드 경남 썸네일 생성기</h1>
         </header>
 

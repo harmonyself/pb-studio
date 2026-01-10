@@ -193,7 +193,63 @@ document.addEventListener('DOMContentLoaded', () => {
         fineTuneControlsContainer.appendChild(createFineTuneControls('강조문구2', state.mainText2));
         
         // 이벤트 리스너 연결
-        speakerImageInput.addEventListener('change', e => loadImage(e.target.files[0], state.speaker));
+        speakerImageInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const loadingOverlay = document.getElementById('loading-overlay');
+            loadingOverlay.style.display = 'flex';
+
+            try {
+                // @imgly/background-removal 사용
+                // CDN에서 로드된 전역 함수 imglyRemoveBackground 사용
+                const blob = await imglyRemoveBackground(file);
+                const url = URL.createObjectURL(blob);
+                
+                const img = new Image();
+                img.onload = () => {
+                    state.speaker.img = img;
+                    
+                    // 가슴 높이 크롭 효과를 위한 자동 배치
+                    // 1. 적절한 크기로 스케일 조정 (화면 높이의 80% 정도 차지하도록)
+                    const scale = (canvas.height * 0.9) / img.height;
+                    state.speaker.scale = scale;
+
+                    // 2. 가로 중앙 정렬
+                    state.speaker.x = (canvas.width / 2) - ((img.width * scale) / 2);
+
+                    // 3. 세로 위치 조정 (하단 정렬 + 약간 아래로 내려서 상반신 크롭 효과)
+                    // 이미지가 캔버스 하단보다 약간 더 내려가도록 설정
+                    state.speaker.y = canvas.height - (img.height * scale) + (img.height * scale * 0.1);
+
+                    // UI 슬라이더 값 업데이트 (동기화)
+                    // (UI 재생성 필요할 수 있음 - 간단히 값만 바꾸면 drawCanvas시 반영됨, 
+                    // 하지만 슬라이더 UI 자체는 createFineTuneControls에서 생성되므로
+                    // 동적으로 찾아서 업데이트하거나, 사용자가 조작할 때 반영됨.
+                    // 여기서는 내부 state만 바꾸고 다시 그리면 됨.)
+                    
+                    loadingOverlay.style.display = 'none';
+                    drawCanvas();
+                    
+                    // 정밀 조정 패널을 다시 그려서 슬라이더 값을 최신 상태로 동기화하는 것이 좋음
+                    // (기존 컨트롤 제거 후 다시 생성)
+                    fineTuneControlsContainer.innerHTML = '';
+                    fineTuneControlsContainer.appendChild(createFineTuneControls('강연자', state.speaker));
+                    fineTuneControlsContainer.appendChild(createFineTuneControls('로고', state.logo));
+                    fineTuneControlsContainer.appendChild(createFineTuneControls('이름/소속', state.speakerName));
+                    fineTuneControlsContainer.appendChild(createFineTuneControls('강조문구1', state.mainText1));
+                    fineTuneControlsContainer.appendChild(createFineTuneControls('강조문구2', state.mainText2));
+                };
+                img.src = url;
+
+            } catch (error) {
+                console.error("배경 제거 실패:", error);
+                alert("배경 제거 중 오류가 발생했습니다. 원본 이미지를 사용합니다.");
+                loadingOverlay.style.display = 'none';
+                loadImage(file, state.speaker);
+            }
+        });
+        
         bgImageInput.addEventListener('change', e => loadImage(e.target.files[0], state.background));
         logoImageInput.addEventListener('change', e => loadImage(e.target.files[0], state.logo));
 
