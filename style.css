@@ -328,3 +328,29 @@ body {
         color: #e0e0e0;
     }
 }
+
+/* Sample Image Preview Styles */
+.sample-image-container {
+    margin-bottom: 1.5rem;
+    text-align: center;
+    background-color: var(--highlight-bg);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.sample-thumb {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    display: block;
+    margin-bottom: 8px;
+}
+
+.sample-label {
+    font-size: 0.85rem;
+    color: var(--secondary-text-color);
+    margin: 0;
+    font-weight: 500;
+}
