@@ -1,4 +1,4 @@
-// article_data.js - 제작 노하우 블로그 데이터 (Reliable Images Updated)
+// article_data.js - 제작 노하우 블로그 데이터 (Final Image Fix)
 
 const ARTICLE_DATA = [
     {
@@ -102,7 +102,7 @@ const ARTICLE_DATA = [
         category: "포토샵 가이드",
         title: "포토샵 기초: 누끼 따기 (배경 제거) 완벽 가이드",
         summary: "어도비 포토샵을 이용해 머리카락 한 올까지 깔끔하게 분리하는 법.",
-        thumb: "https://images.unsplash.com/photo-1626785774573-4b799314346d?w=800&q=80",
+        thumb: "https://images.unsplash.com/photo-1626785774625-ddcddc3445e9?w=800&q=80", 
         content: `
             <h3>가장 쉬운 방법: 자동 선택 도구</h3>
             <p>최신 포토샵 CC 버전에서는 <strong>[선택] -> [피사체]</strong> 버튼 하나만 누르면 AI가 알아서 인물을 잡아줍니다.</p>
@@ -266,7 +266,7 @@ const ARTICLE_DATA = [
         category: "주의사항",
         title: "저작권 주의사항: 폰트와 이미지, 이것만은 피하자",
         summary: "잘못 쓰면 채널 날라갑니다. 안전하게 썸네일 만드는 법.",
-        thumb: "https://images.unsplash.com/photo-1526304640152-d4619684e484?w=800&q=80",
+        thumb: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=800&q=80",
         content: `
             <h3>폰트 저작권</h3>
             <p>'무료 폰트'라고 해서 다 써도 되는 게 아닙니다. '상업적 이용 가능' 여부를 반드시 확인해야 합니다. 눈누(Noonnu) 같은 사이트에서 라이선스를 필터링해서 찾으세요.</p>
@@ -283,7 +283,7 @@ const ARTICLE_DATA = [
         category: "전략 심화",
         title: "벤치마킹 노하우: 잘 나가는 채널 훔쳐보기",
         summary: "모방은 창조의 어머니. 벤치마킹을 제대로 하는 방법.",
-        thumb: "https://images.unsplash.com/photo-1504270997636-07ddf998891f?w=800&q=80",
+        thumb: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
         content: `
             <h3>동종 업계 1등을 찾아라</h3>
             <p>내 주제와 비슷한 채널 중 구독자가 가장 많은 채널 3개를 구독하고 알림 설정을 하세요. 그들이 어떤 썸네일을 올리는지 실시간으로 모니터링합니다.</p>
