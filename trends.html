@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>최신 트렌드 | 유썸생</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+</head>
+<body>
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">유썸생</a>
+            <ul class="nav-links">
+                <li><a href="tool.html">썸네일 생성기</a></li>
+                <li><a href="guide.html">제작 노하우</a></li>
+                <li><a href="trends.html" class="active">트렌드 분석</a></li>
+                <li><a href="awards.html">어워즈</a></li>
+                <li><a href="jobs.html">작업 의뢰</a></li>
+            </ul>
+            <a href="tool.html" class="nav-cta">지금 만들기</a>
+        </div>
+    </nav>
+
+    <main class="content-page">
+        <header class="page-header">
+            <h1>2026 글로벌 썸네일 트렌드</h1>
+            <p>세계 및 국내 최상위 조회수 영상들의 썸네일 스타일을 분석합니다.</p>
+        </header>
+
+        <div class="info-container">
+            <!-- 섹션 1: 글로벌 -->
+            <section class="trend-section">
+                <h2>🌎 Global Top Trending (실시간)</h2>
+                <div class="trend-grid">
+                    <!-- 예시 데이터 -->
+                    <div class="trend-card">
+                        <div class="thumb-placeholder" style="background:url('imgs/mrbeast_style.jpg') center/cover;">
+                            <span class="views">1.2억회</span>
+                        </div>
+                        <h4>고대비(High Contrast) 표정 강조형</h4>
+                        <p class="analysis">미스터비스트 스타일. 과장된 표정과 높은 채도가 특징.</p>
+                    </div>
+                    <div class="trend-card">
+                        <div class="thumb-placeholder" style="background:url('imgs/minimal.jpg') center/cover;">
+                            <span class="views">8천만회</span>
+                        </div>
+                        <h4>미니멀리즘 & 궁금증 유발형</h4>
+                        <p class="analysis">텍스트 없이 오브제 하나만 배치하여 호기심 자극.</p>
+                    </div>
+                    <div class="trend-card">
+                        <div class="thumb-placeholder" style="background:url('imgs/vs.jpg') center/cover;">
+                            <span class="views">5천만회</span>
+                        </div>
+                        <h4>VS (비교) 구도</h4>
+                        <p class="analysis">좌우 분할 화면으로 극명한 대비를 보여주는 방식.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 섹션 2: 국내 -->
+            <section class="trend-section">
+                <h2>🇰🇷 Korea Top Trending</h2>
+                <div class="trend-grid">
+                    <div class="trend-card">
+                        <div class="thumb-placeholder" style="background:url('imgs/entertainment.jpg') center/cover;">
+                            <span class="views">300만회</span>
+                        </div>
+                        <h4>예능형 자막 강조</h4>
+                        <p class="analysis">국내 예능 특유의 화려한 자막과 효과음 시각화.</p>
+                    </div>
+                    <div class="trend-card">
+                        <div class="thumb-placeholder" style="background:url('imgs/vlog.jpg') center/cover;">
+                            <span class="views">150만회</span>
+                        </div>
+                        <h4>감성 브이로그</h4>
+                        <p class="analysis">낮은 채도, 감성적인 폰트, 자연광 활용.</p>
+                    </div>
+                    <div class="trend-card">
+                        <div class="thumb-placeholder" style="background:url('imgs/info.jpg') center/cover;">
+                            <span class="views">100만회</span>
+                        </div>
+                        <h4>정보 요약형</h4>
+                        <p class="analysis">"이것만 알면 끝" 식의 명확한 정보 전달 텍스트.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="trend-tool">
+                <h3>직접 분석해보기</h3>
+                <p>궁금한 영상의 URL을 입력하면 썸네일을 가져와서 분석할 수 있습니다.</p>
+                <!-- 간단한 추출기 (기능 연동 필요시 main.js 확장, 여기선 UI만) -->
+                <div class="simple-extract-box">
+                    <input type="text" placeholder="분석할 유튜브 영상 링크 입력" class="trend-input">
+                    <button class="trend-btn">분석하기</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>&copy; 2026 유썸생. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
