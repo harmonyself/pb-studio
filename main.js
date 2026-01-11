@@ -37,7 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 버튼
     const downloadBtn = document.getElementById('downloadBtn');
-
+    const saveProjectBtn = document.getElementById('saveProjectBtn');
+    const loadProjectInput = document.getElementById('loadProjectInput');
 
 
     // 로딩 오버레이
@@ -411,6 +412,111 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- 프로젝트 저장/불러오기 기능 ---
+    function saveState() {
+        // Image 객체를 Data URL(string)로 변환
+        const serializableState = {
+            speaker: { ...state.speaker, img: state.speaker.img ? state.speaker.img.src : null },
+            backgrounds: state.backgrounds.map(bg => ({ ...bg, img: bg.img ? bg.img.src : null })),
+            logo: { ...state.logo, img: state.logo.img ? state.logo.img.src : null },
+            speakerInfo: { ...state.speakerInfo },
+            mainText1: { ...state.mainText1 },
+            mainText2: { ...state.mainText2 },
+            highlightColor: state.highlightColor,
+            // 참고 이미지 상태 추가
+            reference: {
+                src: referenceImg.src,
+                display: referenceContainer.style.display
+            }
+        };
+
+        const jsonString = JSON.stringify(serializableState, null, 2);
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'project.json';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
+    function loadState(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const loadedData = JSON.parse(e.target.result);
+                restoreState(loadedData);
+            } catch (err) {
+                console.error("프로젝트 파일(JSON)을 불러오는 데 실패했습니다.", err);
+                alert("잘못된 프로젝트 파일입니다.");
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    function restoreState(data) {
+        // 1. 텍스트 및 단순 값 복원
+        speakerNameTextInput.value = data.speakerInfo.name;
+        speakerAffiliationTextInput.value = data.speakerInfo.affiliation;
+        mainText1Input.value = data.mainText1.text;
+        mainText2Input.value = data.mainText2.text;
+        highlightColorInput.value = data.highlightColor;
+
+        Object.assign(state.speakerInfo, data.speakerInfo);
+        Object.assign(state.mainText1, data.mainText1);
+        Object.assign(state.mainText2, data.mainText2);
+        state.highlightColor = data.highlightColor;
+        
+        // 2. 이미지 로딩 준비 (비동기)
+        const imagePromises = [];
+
+        const loadImagePromise = (src) => {
+            return new Promise((resolve, reject) => {
+                if (!src) return resolve(null);
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+                img.src = src;
+            });
+        };
+
+        imagePromises.push(loadImagePromise(data.speaker.img));
+        data.backgrounds.forEach(bg => imagePromises.push(loadImagePromise(bg.img)));
+        imagePromises.push(loadImagePromise(data.logo.img));
+        
+        // 참고 이미지
+        if (data.reference && data.reference.src) {
+             referenceImg.src = data.reference.src;
+             referenceContainer.style.display = data.reference.display;
+        } else {
+             referenceContainer.style.display = 'none';
+        }
+
+        // 3. 모든 이미지 로딩 완료 후 상태 최종 복원
+        Promise.all(imagePromises).then(images => {
+            const [speakerImg, bg1, bg2, bg3, logoImg] = images;
+
+            state.speaker = { ...data.speaker, img: speakerImg };
+            state.backgrounds[0] = { ...data.backgrounds[0], img: bg1 };
+            state.backgrounds[1] = { ...data.backgrounds[1], img: bg2 };
+            state.backgrounds[2] = { ...data.backgrounds[2], img: bg3 };
+            state.logo = { ...data.logo, img: logoImg };
+
+            // 4. 슬라이더 업데이트 및 캔버스 다시 그리기
+            for (const name of Object.keys(controlsMap)) {
+                updateSliders(name);
+            }
+            drawCanvas();
+            alert("프로젝트를 성공적으로 불러왔습니다.");
+        }).catch(err => {
+            console.error("이미지 복원에 실패했습니다.", err);
+            alert("프로젝트에 포함된 이미지를 불러오는 데 실패했습니다.");
+        });
+    }
+
     function init() {
         // 상태값 초기화
         if (speakerNameTextInput) state.speakerInfo.name = speakerNameTextInput.value;
@@ -463,6 +569,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 link.click();
             });
         }
+        
+        // 프로젝트 저장/불러오기 이벤트 리스너
+        if (saveProjectBtn) {
+            saveProjectBtn.addEventListener('click', saveState);
+        }
+        if (loadProjectInput) {
+            loadProjectInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    loadState(file);
+                }
+            });
+        }
+
 
         // 벤치마킹: 내 이미지 업로드 (참고용 이미지)
         if (benchmarkImageInput) {
