@@ -290,12 +290,17 @@ body {
 
 .download-wrapper {
     margin-top: 2rem;
-    width: 300px;
+    width: 100%; /* Full width to allow flex items to distribute */
+    max-width: 300px; /* Keep max-width for larger screens */
+    display: flex;
+    gap: 10px; /* Space between buttons */
+    flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+    justify-content: center; /* Center buttons horizontally */
 }
 
 /* Buttons */
 .action-btn, .primary-btn {
-    width: 100%;
+    flex: 1; /* Allow buttons to grow and shrink */
     padding: 12px;
     border: none;
     border-radius: 8px;
@@ -304,13 +309,14 @@ body {
     cursor: pointer;
     transition: all 0.2s;
     font-family: 'Pretendard', sans-serif;
+    white-space: nowrap; /* Prevent text wrapping inside buttons */
 }
 
 .action-btn {
     background-color: var(--surface-color);
     border: 1px solid var(--border-color);
     color: var(--primary-text-color);
-    margin-top: 10px;
+    margin-top: 0; /* Remove top margin for flex consistency */
 }
 .action-btn:hover {
     background-color: var(--border-color);
@@ -324,6 +330,7 @@ body {
     background-color: var(--accent-color);
     color: white;
     box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
+    margin-top: 0; /* Ensure consistent spacing in flex container */
 }
 .primary-btn:hover {
     background-color: #d00000;
