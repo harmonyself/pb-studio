@@ -475,14 +475,48 @@ body {
     }
 }
 
+/* Collapsible Sample Section */
+.sample-details {
+    background-color: var(--highlight-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.sample-details summary {
+    padding: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--primary-text-color);
+}
+
+.sample-details summary::-webkit-details-marker {
+    display: none;
+}
+
+.sample-details summary::after {
+    content: '+';
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.sample-details[open] summary::after {
+    content: '-';
+}
+
+.sample-details[open] summary {
+    border-bottom: 1px solid var(--border-color);
+}
+
 /* Sample Image Preview Styles */
 .sample-image-container {
-    margin-bottom: 1.5rem;
     text-align: center;
-    background-color: var(--highlight-bg);
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
+    padding: 15px;
 }
 
 .sample-thumb {
