@@ -54,13 +54,15 @@ document.addEventListener('DOMContentLoaded', () => {
             { img: null, x: 640, y: 360, scale: 1 },
             { img: null, x: 640, y: 360, scale: 1 }
         ],
-        logo: { img: null, x: 1100, y: 50, scale: 0.8 },
+        logo: { img: null, x: 1100, y: 50, scale: 0.8 }, // 원래 설정값으로 복원
         // 이름/소속 통합 관리 (좌표는 공유)
         speakerInfo: { name: '홍길동', affiliation: '유썸생 대표', x: 640, y: 450, size: 40 },
         mainText1: { text: '', x: 640, y: 550, size: 90 },
         mainText2: { text: '', x: 640, y: 650, size: 90 },
         highlightColor: '#FFFF00'
     };
+
+    const defaultLogoPath = 'imgs/logo_GroundofDream.png'; // 기본 로고 파일 경로
 
     // --- 메인 그리기 함수 ---
     function drawCanvas() {
@@ -644,8 +646,26 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        // 기본 로고 로드
+        const defaultLogo = new Image();
+        defaultLogo.onload = () => {
+            state.logo.img = defaultLogo;
+            // 로고의 x, y, scale은 state 초기값에서 이미 설정되어 있음
+            drawCanvas(); // 기본 로고 로드 후 캔버스 다시 그리기
+        };
+        defaultLogo.onerror = (err) => {
+            console.error("기본 로고를 불러오는 데 실패했습니다:", err);
+            // 기본 로고 로드 실패 시, state.logo.img는 null로 유지됨
+            drawCanvas(); // 에러 발생 시에도 캔버스 초기 그리기
+        };
+        defaultLogo.src = defaultLogoPath;
+        
         document.fonts.ready.then(() => {
-            drawCanvas();
+            // 기본 로고가 비동기로 로드되므로, 여기서 drawCanvas는 초기 상태를 그리도록 함
+            // 로고 로드 완료 시점에 다시 drawCanvas가 호출될 것임
+            if (!state.logo.img) { // 기본 로고 로드 실패 또는 아직 로드 중인 경우
+                 drawCanvas();
+            }
         });
     }
 
