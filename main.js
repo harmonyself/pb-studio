@@ -438,14 +438,15 @@ document.addEventListener('DOMContentLoaded', () => {
         wrapper.className = 'fine-tune-group';
         wrapper.style.marginBottom = '20px';
         wrapper.style.padding = '10px';
-        wrapper.style.background = 'rgba(255,255,255,0.05)';
+        wrapper.style.background = 'var(--surface-color)';
+        wrapper.style.border = '1px solid var(--border-color)';
         wrapper.style.borderRadius = '8px';
 
         const title = document.createElement('h4');
         title.textContent = name;
         title.style.margin = '0 0 10px 0';
         title.style.fontSize = '14px';
-        title.style.color = '#ddd';
+        title.style.color = 'var(--primary-text-color)';
         wrapper.appendChild(title);
 
         const props = ['x', 'y', 'scale', 'size'];

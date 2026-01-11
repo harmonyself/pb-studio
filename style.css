@@ -212,6 +212,7 @@ body {
         z-index: 100; /* Stay on top of controls */
         padding: 0.5rem;
         min-height: auto;
+        height: auto; /* Reset height for mobile */
         background: var(--bg-color); /* Match bg to hide content behind */
         border-bottom: 1px solid var(--border-color);
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* Shadow for separation */
