@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아티클 읽기 | 유썸생</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+</head>
+<body>
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">유썸생</a>
+            <ul class="nav-links">
+                <li><a href="tool.html">썸네일 생성기</a></li>
+                <li><a href="guide.html" class="active">제작 노하우</a></li>
+                <li><a href="trends.html">트렌드 분석</a></li>
+                <li><a href="awards.html">어워즈</a></li>
+                <li><a href="jobs.html">작업 의뢰</a></li>
+            </ul>
+            <a href="tool.html" class="nav-cta">지금 만들기</a>
+        </div>
+    </nav>
+
+    <main class="content-page" style="padding-top: 40px;">
+        <article class="blog-post-container">
+            <div id="article-header">
+                <span class="category-badge" id="article-category">카테고리</span>
+                <h1 id="article-title">제목을 불러오는 중...</h1>
+                <p class="summary" id="article-summary"></p>
+            </div>
+            
+            <div class="article-featured-image">
+                <img id="article-thumb" src="" alt="썸네일" style="width:100%; border-radius:12px; margin: 30px 0;">
+            </div>
+
+            <div class="article-body" id="article-content">
+                <div class="spinner" style="margin: 50px auto;"></div>
+            </div>
+
+            <div class="article-footer">
+                <a href="guide.html" class="action-btn">목록으로 돌아가기</a>
+            </div>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>&copy; 2026 유썸생. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="article_data.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const id = parseInt(params.get('id'));
+            
+            const article = ARTICLE_DATA.find(a => a.id === id);
+
+            if (article) {
+                document.title = `${article.title} | 유썸생 제작 노하우`;
+                document.getElementById('article-category').textContent = article.category;
+                document.getElementById('article-title').textContent = article.title;
+                document.getElementById('article-summary').textContent = article.summary;
+                document.getElementById('article-thumb').src = article.thumb;
+                document.getElementById('article-content').innerHTML = article.content;
+            } else {
+                document.getElementById('article-content').innerHTML = '<p style="text-align:center;">존재하지 않는 아티클입니다.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
