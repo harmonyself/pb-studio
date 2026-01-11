@@ -29,54 +29,18 @@
         </header>
 
         <div class="info-container">
-            <div class="rank-list">
-                <!-- 1위 -->
-                <div class="rank-item gold">
-                    <div class="rank-badge">1st</div>
-                    <div class="rank-thumb">
-                        <a href="https://www.youtube.com/watch?v=r7McqF9qbWo" target="_blank" class="thumb-link" style="margin:0;">
-                            <img src="https://img.youtube.com/vi/r7McqF9qbWo/maxresdefault.jpg" alt="1위 썸네일" class="real-thumb">
-                        </a>
-                    </div>
-                    <div class="rank-info">
-                        <h3>람보르기니 vs 분쇄기 (World's Largest Shredder)</h3>
-                        <p class="channel">채널명: MrBeast</p>
-                        <p class="stats">🔥 클릭률(CTR): 18.2% (추정)</p>
-                        <p class="comment">심사평: '슈퍼카'와 '파괴'라는 원초적 본능을 자극하는 소재 배치. 썸네일만 봐도 무슨 일이 일어날지 기대하게 만듭니다.</p>
-                    </div>
-                </div>
+            <!-- 탭 UI -->
+            <div class="tabs-container">
+                <button class="tab-btn active" data-period="weekly">주간(Weekly)</button>
+                <button class="tab-btn" data-period="monthly">월간(Monthly)</button>
+                <button class="tab-btn" data-period="yearly">연간(Yearly)</button>
+                <button class="tab-btn" data-period="daily">일간(Daily)</button>
+            </div>
+            
+            <p class="data-period" id="award-period-label">데이터 조회 중...</p>
 
-                <!-- 2위 -->
-                <div class="rank-item silver">
-                    <div class="rank-badge">2nd</div>
-                    <div class="rank-thumb">
-                        <a href="https://www.youtube.com/watch?v=dn_0jX5_z8w" target="_blank" class="thumb-link" style="margin:0;">
-                            <img src="https://img.youtube.com/vi/dn_0jX5_z8w/maxresdefault.jpg" alt="2위 썸네일" class="real-thumb">
-                        </a>
-                    </div>
-                    <div class="rank-info">
-                        <h3>침착맨 삼국지 완전 정복</h3>
-                        <p class="channel">채널명: 침착맨</p>
-                        <p class="stats">🔥 클릭률(CTR): 14.5% (추정)</p>
-                        <p class="comment">심사평: 인물의 진지하면서도 킹받는 표정이 '이 영상은 무조건 재밌다'는 확신을 줍니다. 텍스트 없이도 클릭을 유도하는 고수.</p>
-                    </div>
-                </div>
-
-                <!-- 3위 -->
-                <div class="rank-item bronze">
-                    <div class="rank-badge">3rd</div>
-                    <div class="rank-thumb">
-                        <a href="https://www.youtube.com/watch?v=Xw9j4s_g6so" target="_blank" class="thumb-link" style="margin:0;">
-                            <img src="https://img.youtube.com/vi/Xw9j4s_g6so/maxresdefault.jpg" alt="3위 썸네일" class="real-thumb">
-                        </a>
-                    </div>
-                    <div class="rank-info">
-                        <h3>성시경의 먹을텐데 (순대국 편)</h3>
-                        <p class="channel">채널명: 성시경 SUNG SI KYUNG</p>
-                        <p class="stats">🔥 클릭률(CTR): 11.8% (추정)</p>
-                        <p class="comment">심사평: 소주 한 잔과 국밥, 그리고 성시경의 표정. 시청자의 식욕과 술 한 잔의 추억을 동시에 자극하는 완벽한 미식 썸네일.</p>
-                    </div>
-                </div>
+            <div class="rank-list" id="award-list">
+                <!-- JS로 자동 생성됨 -->
             </div>
         </div>
     </main>
@@ -86,5 +50,6 @@
             <p>&copy; 2026 유썸생. All rights reserved.</p>
         </div>
     </footer>
+    <script src="youtube_data.js"></script>
 </body>
 </html>
