@@ -169,12 +169,16 @@ body {
 /* Mobile Optimization Enhancements */
 @media (max-width: 900px) {
     body {
-        overflow-y: auto; /* Ensure body scrolls */
+        height: auto;
+        min-height: 100vh;
+        display: block;
+        overflow-y: visible;
     }
 
     .app-container {
-        height: auto; /* Remove fixed height constraint */
-        min-height: 100vh;
+        height: auto;
+        min-height: auto;
+        display: block;
         overflow: visible;
     }
 
