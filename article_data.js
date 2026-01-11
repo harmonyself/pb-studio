@@ -6,7 +6,7 @@ const ARTICLE_DATA = [
         category: "이론 & 전략",
         title: "썸네일의 본질: 클릭률(CTR)의 모든 것",
         summary: "유튜브 알고리즘의 핵심, CTR을 이해하고 높이는 전략적 접근법.",
-        thumb: "https://placehold.co/600x400/111/fff?text=CTR+Strategy",
+        thumb: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=60",
         content: `
             <h3>유튜브 알고리즘의 첫 번째 관문, CTR</h3>
             <p>아무리 영상 내용이 좋아도 클릭하지 않으면 조회수는 0입니다. 노출 클릭률(Click-Through Rate)은 영상이 100명에게 노출되었을 때 몇 명이 클릭했는지를 나타내는 지표입니다. 보통 4~5%가 평균이며, 10%가 넘어가면 '대박' 조짐이 보이는 것입니다.</p>
@@ -24,7 +24,7 @@ const ARTICLE_DATA = [
         category: "디자인 요소",
         title: "인물 중심 썸네일: 시선을 훔치는 표정 연기",
         summary: "사람은 본능적으로 타인의 얼굴에 반응합니다. 클릭을 부르는 표정의 비밀.",
-        thumb: "https://placehold.co/600x400/222/fff?text=Face+Expression",
+        thumb: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&auto=format&fit=crop&q=60",
         content: `
             <h3>미러 뉴런(Mirror Neurons) 효과</h3>
             <p>썸네일 속 인물이 웃으면 시청자도 기분이 좋아지고, 놀란 표정을 지으면 시청자도 긴장합니다. 이 심리를 이용해야 합니다.</p>
@@ -45,7 +45,7 @@ const ARTICLE_DATA = [
         category: "디자인 요소",
         title: "텍스트 디자인: 가독성을 높이는 폰트와 배치",
         summary: "모바일에서 잘 보이는 폰트 선택법과 텍스트 배치 노하우.",
-        thumb: "https://placehold.co/600x400/333/fff?text=Typography",
+        thumb: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&auto=format&fit=crop&q=60",
         content: `
             <h3>모바일 퍼스트 (Mobile First)</h3>
             <p>유튜브 시청의 70% 이상은 모바일에서 일어납니다. 작은 화면에서도 글자가 보여야 합니다.</p>
@@ -65,7 +65,7 @@ const ARTICLE_DATA = [
         category: "디자인 요소",
         title: "색상의 심리학: 유튜브에서 먹히는 배색 조합",
         summary: "눈에 띄는 색상은 따로 있습니다. 보색 대비와 강조색 활용법.",
-        thumb: "https://placehold.co/600x400/444/fff?text=Color+Psychology",
+        thumb: "https://images.unsplash.com/photo-1505909182942-e2f09aee3e89?w=800&auto=format&fit=crop&q=60",
         content: `
             <h3>유튜브 배경(흰색/검은색)을 고려하라</h3>
             <p>유튜브 인터페이스가 흰색(라이트 모드)이거나 다크 그레이(다크 모드)이므로, 썸네일 배경이 너무 하얗거나 어두우면 묻힐 수 있습니다. 테두리(Stroke)를 활용하거나 채도가 높은 색을 배경으로 쓰세요.</p>
@@ -83,7 +83,7 @@ const ARTICLE_DATA = [
         category: "이론 & 전략",
         title: "구도의 법칙: 3분할과 F자형 시선 처리",
         summary: "안정적이면서도 시선을 끄는 이미지 레이아웃 잡는 법.",
-        thumb: "https://placehold.co/600x400/555/fff?text=Composition",
+        thumb: "https://images.unsplash.com/photo-1512540315028-2c1a6497da04?w=800&auto=format&fit=crop&q=60",
         content: `
             <h3>3분할 법칙 (Rule of Thirds)</h3>
             <p>화면을 가로세로 3등분 했을 때, 선이 교차하는 4개의 점에 주제(인물 얼굴, 핵심 오브제)를 배치하세요. 가장 안정적이고 자연스럽습니다.</p>
@@ -102,7 +102,7 @@ const ARTICLE_DATA = [
         category: "포토샵 가이드",
         title: "포토샵 기초: 누끼 따기 (배경 제거) 완벽 가이드",
         summary: "어도비 포토샵을 이용해 머리카락 한 올까지 깔끔하게 분리하는 법.",
-        thumb: "https://placehold.co/600x400/666/fff?text=Photoshop+Cutout",
+        thumb: "https://images.unsplash.com/photo-1626785774573-4b799314346d?w=800&auto=format&fit=crop&q=60",
         content: `
             <h3>가장 쉬운 방법: 자동 선택 도구</h3>
             <p>최신 포토샵 CC 버전에서는 <strong>[선택] -> [피사체]</strong> 버튼 하나만 누르면 AI가 알아서 인물을 잡아줍니다.</p>
@@ -114,9 +114,6 @@ const ARTICLE_DATA = [
                 <li>경계가 모호한 머리카락 부분을 슥슥 문지르면 배경색은 빠지고 머리카락만 남습니다.</li>
                 <li>출력 설정을 '레이어 마스크가 있는 새 레이어'로 하고 확인을 누릅니다.</li>
             </ol>
-            <div class="img-box">
-                <img src="https://placehold.co/600x300/444/fff?text=Select+and+Mask+UI" alt="포토샵 선택 및 마스크 UI">
-            </div>
         `
     },
     {
@@ -124,7 +121,7 @@ const ARTICLE_DATA = [
         category: "포토샵 가이드",
         title: "포토샵 심화: 텍스트 외곽선과 그림자 효과",
         summary: "글자가 배경에서 튀어나올 듯한 입체감을 주는 레이어 스타일.",
-        thumb: "https://placehold.co/600x400/777/fff?text=Text+Effects",
+        thumb: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&auto=format&fit=crop&q=60",
         content: `
             <h3>레이어 스타일 (Layer Style) 활용</h3>
             <p>텍스트 레이어를 더블 클릭하여 '레이어 스타일' 창을 엽니다.</p>
@@ -149,7 +146,7 @@ const ARTICLE_DATA = [
         category: "포토샵 가이드",
         title: "포토샵 필터: 인물을 돋보이게 하는 보정법",
         summary: "Camera Raw 필터를 이용해 칙칙한 사진을 쨍하게 만드는 법.",
-        thumb: "https://placehold.co/600x400/888/fff?text=Photo+Retouching",
+        thumb: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800&auto=format&fit=crop&q=60",
         content: `
             <h3>Camera Raw 필터 마법</h3>
             <p>레이어를 선택하고 <strong>[필터] -> [Camera Raw 필터]</strong> (단축키: Ctrl+Shift+A)로 들어갑니다.</p>
@@ -167,7 +164,7 @@ const ARTICLE_DATA = [
         category: "툴 활용",
         title: "캔바(Canva) 활용법: 템플릿으로 5분 컷",
         summary: "디자인 똥손도 금손처럼 보이게 만드는 캔바 200% 활용 가이드.",
-        thumb: "https://placehold.co/600x400/999/fff?text=Canva+Guide",
+        thumb: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&auto=format&fit=crop&q=60",
         content: `
             <h3>검색어가 생명이다</h3>
             <p>단순히 '썸네일'이라고 검색하지 말고 <strong>'YouTube Thumbnail Vlog', 'YouTube Thumbnail Tech'</strong> 처럼 구체적인 영문 키워드로 검색하면 고퀄리티 해외 템플릿을 찾을 수 있습니다.</p>
@@ -184,7 +181,7 @@ const ARTICLE_DATA = [
         category: "툴 활용",
         title: "미리캔버스 활용법: 한국형 디자인 요소",
         summary: "한국 유튜브 정서에 딱 맞는 예능 자막과 소스 활용하기.",
-        thumb: "https://placehold.co/600x400/aaa/fff?text=MiriCanvas",
+        thumb: "https://images.unsplash.com/photo-1555421689-491a97ff2040?w=800&auto=format&fit=crop&q=60",
         content: `
             <h3>한국형 폰트와 스타일</h3>
             <p>미리캔버스는 국내 서비스답게 '잘난체', '티몬체' 등 한국 유튜버들이 애용하는 폰트가 기본 탑재되어 있습니다.</p>
@@ -198,7 +195,7 @@ const ARTICLE_DATA = [
         category: "툴 활용",
         title: "망고보드 활용법: 예능형 자막 끝판왕",
         summary: "TV 예능 프로그램 스타일의 화려한 자막을 쉽게 만드는 법.",
-        thumb: "https://placehold.co/600x400/bbb/fff?text=MangoBoard",
+        thumb: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=800&auto=format&fit=crop&q=60",
         content: `
             <h3>텍스트 효과 프리셋</h3>
             <p>망고보드의 가장 큰 장점은 완성된 '텍스트 스타일'입니다. 텍스트를 클릭하고 좌측 메뉴에서 '워드아트'나 '텍스트 효과'를 고르면 무한도전, 런닝맨 스타일의 자막을 원클릭으로 적용할 수 있습니다.</p>
@@ -209,7 +206,7 @@ const ARTICLE_DATA = [
         category: "툴 활용",
         title: "PPT(파워포인트)로 썸네일 만들기",
         summary: "포토샵이 없다면? 우리에겐 파워포인트가 있습니다.",
-        thumb: "https://placehold.co/600x400/ccc/fff?text=PowerPoint",
+        thumb: "https://images.unsplash.com/photo-1542744094-3a31f272c490?w=800&auto=format&fit=crop&q=60",
         content: `
             <h3>슬라이드 크기 설정</h3>
             <p>[디자인] -> [슬라이드 크기] -> [사용자 지정]에서 너비 1280px, 높이 720px로 설정하세요. (또는 16:9 비율)</p>
@@ -226,7 +223,7 @@ const ARTICLE_DATA = [
         category: "전략 심화",
         title: "썸네일 A/B 테스트: 대박 터지는 썸네일 고르기",
         summary: "어떤 썸네일이 더 좋을까? 고민하지 말고 데이터로 확인하세요.",
-        thumb: "https://placehold.co/600x400/ddd/fff?text=AB+Testing",
+        thumb: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=60",
         content: `
             <h3>A/B 테스트란?</h3>
             <p>두 가지 버전의 썸네일을 준비해서 번갈아 보여주거나, 초반 반응을 보고 교체하는 전략입니다.</p>
@@ -243,7 +240,7 @@ const ARTICLE_DATA = [
         category: "전략 심화",
         title: "장르별 스타일 분석: 브이로그 vs 정보 vs 예능",
         summary: "내 채널의 성격에 맞는 '교복(정석)' 스타일은 무엇일까?",
-        thumb: "https://placehold.co/600x400/eee/fff?text=Genre+Style",
+        thumb: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=60",
         content: `
             <h3>1. 브이로그 (Vlog)</h3>
             <ul>
@@ -269,7 +266,7 @@ const ARTICLE_DATA = [
         category: "주의사항",
         title: "저작권 주의사항: 폰트와 이미지, 이것만은 피하자",
         summary: "잘못 쓰면 채널 날라갑니다. 안전하게 썸네일 만드는 법.",
-        thumb: "https://placehold.co/600x400/f00/fff?text=Copyright",
+        thumb: "https://images.unsplash.com/photo-1526304640152-d4619684e484?w=800&auto=format&fit=crop&q=60",
         content: `
             <h3>폰트 저작권</h3>
             <p>'무료 폰트'라고 해서 다 써도 되는 게 아닙니다. '상업적 이용 가능' 여부를 반드시 확인해야 합니다. 눈누(Noonnu) 같은 사이트에서 라이선스를 필터링해서 찾으세요.</p>
@@ -286,7 +283,7 @@ const ARTICLE_DATA = [
         category: "전략 심화",
         title: "벤치마킹 노하우: 잘 나가는 채널 훔쳐보기",
         summary: "모방은 창조의 어머니. 벤치마킹을 제대로 하는 방법.",
-        thumb: "https://placehold.co/600x400/000/fff?text=Benchmarking",
+        thumb: "https://images.unsplash.com/photo-1504270997636-07ddf998891f?w=800&auto=format&fit=crop&q=60",
         content: `
             <h3>동종 업계 1등을 찾아라</h3>
             <p>내 주제와 비슷한 채널 중 구독자가 가장 많은 채널 3개를 구독하고 알림 설정을 하세요. 그들이 어떤 썸네일을 올리는지 실시간으로 모니터링합니다.</p>
