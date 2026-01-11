@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { img: null, x: 640, y: 360, scale: 1 },
             { img: null, x: 640, y: 360, scale: 1 }
         ],
-        logo: { img: null, x: 1100, y: 50, scale: 0.8 }, // 원래 설정값으로 복원
+        logo: { img: null, x: 1075, y: 125, scale: 0.3 }, // 사용자가 요청한 기본값으로 변경
         // 이름/소속 통합 관리 (좌표는 공유)
         speakerInfo: { name: '홍길동', affiliation: '유썸생 대표', x: 640, y: 450, size: 40 },
         mainText1: { text: '', x: 640, y: 550, size: 90 },
