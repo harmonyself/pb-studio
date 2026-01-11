@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 입력 요소
     const speakerImageInput = document.getElementById('speakerImage');
-    const removeSpeakerBgInput = document.getElementById('removeSpeakerBg'); // (옵션, 현재 미구현 UI)
     
     // 배경 이미지 입력 3개
     const bgImageInput1 = document.getElementById('bgImage1');
@@ -21,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 버튼
     const downloadBtn = document.getElementById('downloadBtn');
+    const aiGenBtn = document.getElementById('aiGenBtn'); // 랜덤 배경 버튼
 
     // --- 테마 토글 로직 ---
     const themeToggleBtn = document.getElementById('theme-toggle');
@@ -80,6 +80,46 @@ document.addEventListener('DOMContentLoaded', () => {
     if (sampleThumbElement) {
         const randomImage = sampleImages[Math.floor(Math.random() * sampleImages.length)];
         sampleThumbElement.src = `imgs/${randomImage}`;
+    }
+
+    // --- 랜덤 배경 추천 로직 ---
+    if (aiGenBtn) {
+        aiGenBtn.addEventListener('click', () => {
+            // 3장의 유니크한 랜덤 이미지 선택
+            const shuffled = [...sampleImages].sort(() => 0.5 - Math.random());
+            const selected = shuffled.slice(0, 3);
+            
+            // 로딩 표시
+            const originalText = aiGenBtn.textContent;
+            aiGenBtn.textContent = '🎲 배경 생성 중...';
+            aiGenBtn.disabled = true;
+
+            const loadPromise = (src, index) => {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    // 로컬 이미지이므로 crossOrigin은 불필요할 수 있으나 안전하게 처리
+                    img.onload = () => {
+                        state.backgrounds[index] = img;
+                        resolve();
+                    };
+                    img.onerror = () => {
+                         state.backgrounds[index] = null;
+                         resolve();
+                    }
+                    img.src = 'imgs/' + src;
+                });
+            };
+
+            Promise.all([
+                loadPromise(selected[0], 0),
+                loadPromise(selected[1], 1),
+                loadPromise(selected[2], 2)
+            ]).then(() => {
+                drawCanvas();
+                aiGenBtn.textContent = originalText;
+                aiGenBtn.disabled = false;
+            });
+        });
     }
 
     // --- 상태 관리 객체 ---

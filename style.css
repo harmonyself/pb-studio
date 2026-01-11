@@ -279,55 +279,149 @@ body {
     width: 300px;
 }
 
-/* Info Section (SEO & Content) */
+/* Buttons */
+.action-btn, .primary-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Pretendard', sans-serif;
+}
+
+.action-btn {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    color: var(--primary-text-color);
+    margin-top: 10px;
+}
+.action-btn:hover {
+    background-color: var(--border-color);
+}
+.action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.primary-btn {
+    background-color: var(--accent-color);
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
+}
+.primary-btn:hover {
+    background-color: #d00000;
+    transform: translateY(-2px);
+}
+
+/* Info Section (Enhanced for Publisher Content) */
 .info-section {
-    background-color: #f9f9f9;
-    padding: 60px 20px;
-    border-top: 1px solid #e5e5e5;
-    color: #333;
+    background-color: var(--bg-color);
+    padding: 80px 20px;
+    border-top: 1px solid var(--border-color);
 }
 
 .info-container {
-    max-width: 1000px;
+    max-width: 800px;
     margin: 0 auto;
 }
 
-.info-section article {
-    margin-bottom: 40px;
+.content-header {
+    text-align: center;
+    margin-bottom: 60px;
 }
 
-.info-section h2 {
-    font-size: 1.5rem;
+.content-header h2 {
+    font-size: 2.2rem;
     margin-bottom: 15px;
-    color: #111;
-    border-left: 5px solid #065fd4; /* YouTube Blue accent */
+    color: var(--primary-text-color);
+    border: none;
+    padding: 0;
+}
+
+.content-header p {
+    font-size: 1.2rem;
+    color: var(--secondary-text-color);
+}
+
+.content-article {
+    margin-bottom: 60px;
+    line-height: 1.8;
+}
+
+.content-article h3 {
+    font-size: 1.5rem;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    color: var(--primary-text-color);
+    border-left: 4px solid var(--accent-color);
     padding-left: 15px;
 }
 
-.info-section p, .info-section li, .info-section dd {
-    font-size: 1rem;
-    line-height: 1.7;
-    color: #555;
-}
-
-.info-section ul, .info-section ol {
-    margin-left: 20px;
-    margin-bottom: 15px;
-}
-
-.info-section li {
-    margin-bottom: 8px;
-}
-
-.info-section dt {
-    font-weight: 700;
-    margin-top: 15px;
-    color: #333;
-}
-
-.info-section dd {
-    margin-left: 0;
+.content-article h4 {
+    font-size: 1.2rem;
+    margin-top: 30px;
     margin-bottom: 10px;
+    color: var(--primary-text-color);
+}
+
+.content-article p {
+    margin-bottom: 20px;
+    font-size: 1.05rem;
+    color: var(--secondary-text-color);
+}
+
+.content-article ul {
+    background: var(--surface-color);
+    padding: 25px 40px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.content-article li {
+    margin-bottom: 12px;
+    color: var(--secondary-text-color);
+}
+
+.content-article strong {
+    color: var(--primary-text-color);
+    font-weight: 700;
+}
+
+.content-article dl {
+    background: var(--surface-color);
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.content-article dt {
+    color: var(--accent-color);
+    font-weight: 700;
+    margin-top: 20px;
+    font-size: 1.1rem;
+}
+.content-article dt:first-child {
+    margin-top: 0;
+}
+
+.content-article dd {
+    margin-left: 0;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    color: var(--secondary-text-color);
+}
+
+.content-footer {
+    text-align: center;
+    margin-top: 80px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border-color);
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--primary-text-color);
 }
 
 /* Footer */

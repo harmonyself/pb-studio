@@ -46,11 +46,7 @@
                     <div class="control">
                         <label for="speakerImage">강연자 사진 (좌측)</label>
                         <input type="file" id="speakerImage" accept="image/*">
-                        <p class="description" style="margin-top:5px; font-size:0.8rem; color: #4caf50;">✨ 사진을 올리면 자동으로 배경이 제거됩니다.</p>
-                        <div class="checkbox-control" style="display:none;">
-                            <input type="checkbox" id="removeSpeakerBg">
-                            <label for="removeSpeakerBg">인물 배경 제거 (준비중)</label>
-                        </div>
+                        <p class="description" style="margin-top:5px; font-size:0.8rem; color: #4caf50;">✨ 사진을 올리면 AI가 자동으로 배경을 제거합니다.</p>
                     </div>
                     <div class="control">
                         <label>배경 사진 (3장 합성)</label>
@@ -62,7 +58,7 @@
                         <p class="description" style="margin-top:5px; font-size:0.8rem;">3장을 선택하면 자동으로 자연스럽게 합성됩니다.</p>
                     </div>
                     <div class="control">
-                        <button id="aiGenBtn">✨ AI로 배경 생성 (준비중)</button>
+                        <button id="aiGenBtn" class="action-btn">🎲 랜덤 배경 추천</button>
                     </div>
                     <div class="control">
                         <label for="logoImage">로고 (우측 상단)</label>
@@ -103,48 +99,64 @@
                     <canvas id="thumbnailCanvas" width="1280" height="720"></canvas>
                 </div>
                 <div class="download-wrapper">
-                    <button id="downloadBtn">썸네일 다운로드 (PNG)</button>
+                    <button id="downloadBtn" class="primary-btn">썸네일 다운로드 (PNG)</button>
                 </div>
             </section>
         </main>
     </div>
 
-    <!-- SEO 및 정보 콘텐츠 섹션 (애드센스 최적화) -->
+    <!-- SEO 및 정보 콘텐츠 섹션 (애드센스 최적화: 고부가가치 콘텐츠) -->
     <section class="info-section">
         <div class="info-container">
-            <article>
-                <h2>유튜브 썸네일 제작, 이제 전문가처럼 쉽게 만드세요</h2>
-                <p>유썸생은 별도의 프로그램 설치 없이 웹 브라우저에서 바로 고품질의 유튜브 썸네일을 제작할 수 있는 무료 온라인 도구입니다. 복잡한 포토샵 없이도 클릭 몇 번으로 시선을 사로잡는 썸네일을 완성해보세요.</p>
+            <header class="content-header">
+                <h2>유튜브 썸네일 제작 완벽 가이드</h2>
+                <p>조회수를 부르는 썸네일의 비밀부터 디자인 원칙, 그리고 유썸생 활용법까지 상세하게 다룹니다.</p>
+            </header>
+
+            <article class="content-article">
+                <h3>PART 1. 왜 썸네일이 유튜브 성공의 열쇠인가?</h3>
+                <p>유튜브 알고리즘의 첫 번째 관문은 '노출 클릭률(CTR)'입니다. 아무리 영상 내용이 좋아도, 사용자가 클릭하지 않으면 그 영상은 죽은 영상이나 다름없습니다. 썸네일은 시청자와 영상이 만나는 첫 번째 접점이며, 0.1초 만에 승부가 결정되는 전장입니다.</p>
+                <p>성공적인 유튜버들의 공통점은 썸네일에 엄청난 공을 들인다는 점입니다. 단순히 예쁜 이미지가 아니라, 시청자의 호기심을 자극하고 영상의 핵심 메시지를 직관적으로 전달하는 '전략적인 이미지'가 필요합니다. 유썸생(Youtbu Thumb Generator)은 이러한 전략적 요소를 누구나 쉽게 구현할 수 있도록 설계되었습니다.</p>
             </article>
 
-            <article>
-                <h2>주요 기능 소개</h2>
+            <article class="content-article">
+                <h3>PART 2. 클릭을 부르는 고효율 썸네일의 3가지 법칙</h3>
+                
+                <h4>1. 인물의 감정을 활용하라 (Human Connection)</h4>
+                <p>사람은 본능적으로 타인의 얼굴, 특히 '눈'과 '표정'에 반응합니다. 썸네일에 강연자나 유튜버의 감정이 담긴 표정(놀람, 기쁨, 진지함 등)을 크게 배치하면 주목도가 급상승합니다. 유썸생의 '자동 배경 제거' 기능을 사용하여 인물을 부각시키고, 배경과의 대비를 통해 인물에게 시선을 집중시키세요.</p>
+                
+                <h4>2. 텍스트는 '짧고', '굵게', '궁금하게'</h4>
+                <p>모바일 환경에서 유튜브를 시청하는 비중이 70%를 넘습니다. 작은 화면에서도 글자가 잘 보이려면 텍스트는 10자 이내로 줄이고, 폰트는 두껍고 가독성이 좋아야 합니다. 유썸생은 유튜브 썸네일에 최적화된 굵은 산세리프 폰트와 외곽선 스타일을 기본으로 제공합니다. 또한, 괄호 `( )` 기능을 통해 핵심 키워드에만 형광펜 효과를 주어 가독성을 극대화할 수 있습니다.</p>
+
+                <h4>3. 색상의 심리학 (Color Psychology)</h4>
+                <p>유튜브의 브랜드 컬러인 '레드'와 대비되는 색상, 혹은 주목도가 높은 '옐로우', '네온 그린' 등을 활용하세요. 유썸생의 기본 템플릿은 어두운 배경에 밝은 텍스트와 노란색 하이라이트를 사용하여 명시성을 높였습니다. 이는 뉴스나 정보성 콘텐츠에서 신뢰감과 주목도를 동시에 주는 검증된 배색입니다.</p>
+            </article>
+
+            <article class="content-article">
+                <h3>PART 3. 유썸생(PB Studio) 200% 활용하기</h3>
+                <p>이 도구는 단순한 편집기를 넘어, 디자인 감각이 부족한 크리에이터도 '전문가 수준'의 결과물을 얻을 수 있도록 돕습니다.</p>
+                
                 <ul>
-                    <li><strong>스마트 배경 제거:</strong> 인물 사진을 업로드하면 AI가 자동으로 배경을 제거하고 썸네일에 최적화된 위치로 배치합니다.</li>
-                    <li><strong>벤치마킹 오버레이:</strong> 따라하고 싶은 유명 유튜버의 썸네일을 밑그림으로 깔고 내 썸네일을 똑같이 디자인해보세요. (투명도 조절 지원)</li>
-                    <li><strong>자동 텍스트 디자인:</strong> 가독성 높은 폰트와 외곽선, 강조 효과가 자동으로 적용되어 전문 디자이너가 만든 듯한 퀄리티를 보장합니다.</li>
+                    <li><strong>벤치마킹 기능 활용:</strong> 잘 되는 채널의 썸네일 구도를 따라해보세요. 인물 위치, 텍스트 크기 등을 슬라이더로 미세 조정하여 황금 비율을 찾을 수 있습니다.</li>
+                    <li><strong>3분할 배경 합성:</strong> 단조로운 단색 배경 대신, 관련 이미지 3장을 업로드해보세요. 유썸생이 자동으로 부드럽게 그라데이션 합성하여 깊이감 있는 배경을 만들어줍니다. 이는 썸네일의 퀄리티를 순식간에 높여주는 고급 기법입니다.</li>
+                    <li><strong>시리즈물 통일성 유지:</strong> 한 번 잡은 레이아웃(인물 위치, 로고 위치)을 그대로 유지한 채 텍스트와 배경만 바꾸면, 채널의 브랜딩이 강화된 시리즈 썸네일을 1분 만에 대량 생산할 수 있습니다.</li>
                 </ul>
             </article>
 
-            <article>
-                <h2>사용 방법 (가이드)</h2>
-                <ol>
-                    <li><strong>이미지 업로드:</strong> 배경 사진과 인물(강연자) 사진을 업로드합니다. 인물 사진은 배경 제거 기능을 활용하면 더욱 깔끔합니다.</li>
-                    <li><strong>텍스트 입력:</strong> 썸네일에 들어갈 핵심 문구를 입력하세요. 괄호 ( )를 사용하면 해당 단어의 색상을 강조할 수 있습니다.</li>
-                    <li><strong>세부 조정:</strong> 우측의 컨트롤 패널을 이용해 각 요소의 위치와 크기를 미세하게 조정하여 완벽한 구도를 잡으세요.</li>
-                    <li><strong>다운로드:</strong> 완성된 이미지를 PNG 파일로 다운로드하여 유튜브에 바로 업로드하세요.</li>
-                </ol>
-            </article>
-            
-            <article>
-                <h2>자주 묻는 질문 (FAQ)</h2>
+            <article class="content-article">
+                <h3>PART 4. 자주 묻는 질문과 팁</h3>
                 <dl>
-                    <dt>Q. 정말 무료인가요?</dt>
-                    <dd>A. 네, 유썸생의 모든 기능은 회원가입 없이 무료로 제공됩니다.</dd>
-                    <dt>Q. 생성된 썸네일의 저작권은 누구에게 있나요?</dt>
-                    <dd>A. 사용자가 직접 업로드한 이미지와 생성한 썸네일의 저작권은 사용자 본인에게 있습니다.</dd>
+                    <dt>Q. 배경 제거가 잘 안 될 때는 어떻게 하나요?</dt>
+                    <dd>A. 인물과 배경의 색상 대비가 뚜렷할수록 AI가 더 정확하게 인식합니다. 복잡한 배경보다는 단색 벽이나 깔끔한 배경에서 찍은 사진을 사용하시면 가장 좋은 결과를 얻을 수 있습니다.</dd>
+                    
+                    <dt>Q. 글자 색상을 바꾸고 싶어요.</dt>
+                    <dd>A. '강조 문구' 입력란에서 괄호 `( )`를 사용하면 해당 부분만 설정한 '강조 색상'으로 변경됩니다. 전체 텍스트 색상은 흰색이 가독성에 가장 유리하여 고정되어 있습니다.</dd>
                 </dl>
             </article>
+
+            <div class="content-footer">
+                <p>유튜브의 세계에서 썸네일은 책의 표지와 같습니다. 유썸생을 통해 여러분의 콘텐츠가 더 많은 사람들에게 닿기를 응원합니다.</p>
+            </div>
         </div>
     </section>
 
