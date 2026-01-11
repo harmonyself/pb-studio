@@ -17,17 +17,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainText2Input = document.getElementById('mainText2');
     const highlightColorInput = document.getElementById('highlightColor');
     const fineTuneControlsContainer = document.getElementById('fine-tune-controls');
-    
-    // 참고 이미지 업로드
+
+    // 벤치마킹 & 유튜브 추출 요소
     const benchmarkImageInput = document.getElementById('benchmarkImage');
+    const samplePreview = document.getElementById('samplePreview');
+    const samplePlaceholder = document.getElementById('samplePlaceholder');
+    
+    const ytUrlInput = document.getElementById('ytUrlInput');
+    const ytExtractBtn = document.getElementById('ytExtractBtn');
+    const ytPreviewArea = document.getElementById('ytPreviewArea');
+    const ytPreviewImg = document.getElementById('ytPreviewImg');
+    const ytDownloadLink = document.getElementById('ytDownloadLink');
+    const ytUseRefBtn = document.getElementById('ytUseRefBtn');
 
     // 버튼
     const downloadBtn = document.getElementById('downloadBtn');
     const aiGenBtn = document.getElementById('aiGenBtn'); // 랜덤 배경 버튼
 
     // --- 테마 토글 로직 ---
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    const sunIcon = document.querySelector('.sun-icon');
+    const themeToggleBtn = document.getElementById('theme-toggle');    const sunIcon = document.querySelector('.sun-icon');
     const moonIcon = document.querySelector('.moon-icon');
     
     function setTheme(theme) {
@@ -79,11 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'Wdp_sTGF7h4.jpg', '-XHZ4y98sd4.jpg', '_qNWSGlcUeI.jpg'
     ];
     
-    const sampleThumbElement = document.querySelector('.sample-thumb');
-    if (sampleThumbElement) {
-        const randomImage = sampleImages[Math.floor(Math.random() * sampleImages.length)];
-        sampleThumbElement.src = `imgs/${randomImage}`;
-    }
+    // (랜덤 샘플 자동 표시 기능 제거됨 - 사용자 업로드 방식 변경)
 
     // --- 랜덤 배경 추천 로직 ---
     if (aiGenBtn) {
@@ -579,19 +583,57 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // 참고 이미지 업로드 핸들러
+        // 벤치마킹: 내 이미지 업로드
         if (benchmarkImageInput) {
             benchmarkImageInput.addEventListener('change', e => {
                 const file = e.target.files[0];
                 if (!file) return;
                 const reader = new FileReader();
                 reader.onload = evt => {
-                    const sampleThumbElement = document.querySelector('.sample-thumb');
-                    if (sampleThumbElement) {
-                        sampleThumbElement.src = evt.target.result;
+                    if (samplePreview) {
+                        samplePreview.src = evt.target.result;
+                        samplePreview.style.display = 'block';
+                        if (samplePlaceholder) samplePlaceholder.style.display = 'none';
                     }
                 };
                 reader.readAsDataURL(file);
+            });
+        }
+
+        // 유튜브 썸네일 추출기
+        if (ytExtractBtn && ytUrlInput) {
+            ytExtractBtn.addEventListener('click', () => {
+                const url = ytUrlInput.value;
+                let videoId = '';
+                
+                if (url.includes('youtu.be/')) {
+                    videoId = url.split('youtu.be/')[1].split('?')[0];
+                } else if (url.includes('v=')) {
+                    videoId = url.split('v=')[1].split('&')[0];
+                }
+
+                if (videoId) {
+                    const thumbUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+                    
+                    if (ytPreviewImg) {
+                        ytPreviewImg.src = thumbUrl;
+                        ytPreviewArea.style.display = 'block';
+                        ytDownloadLink.href = thumbUrl;
+                    }
+                } else {
+                    alert('유효한 유튜브 주소가 아닙니다.');
+                }
+            });
+        }
+
+        // 추출된 이미지를 '참고용'으로 등록
+        if (ytUseRefBtn && ytPreviewImg) {
+            ytUseRefBtn.addEventListener('click', () => {
+                if (samplePreview) {
+                    samplePreview.src = ytPreviewImg.src;
+                    samplePreview.style.display = 'block';
+                    if (samplePlaceholder) samplePlaceholder.style.display = 'none';
+                }
             });
         }
 

@@ -38,12 +38,28 @@
             <!-- 컨트롤 패널 -->
             <aside class="controls-panel">
                 <div class="control-group">
+                    <h2>0. 유튜브 썸네일 추출 (1단계)</h2>
+                    <p class="description">유튜브 영상 링크를 넣으면 고화질 썸네일을 가져옵니다.</p>
+                    <div class="control" style="display:flex; gap:5px;">
+                        <input type="text" id="ytUrlInput" placeholder="유튜브 주소 (https://youtu.be/...)" style="flex:1;">
+                        <button id="ytExtractBtn" class="action-btn" style="width:auto; margin-top:0;">추출</button>
+                    </div>
+                    <div id="ytPreviewArea" style="display:none; margin-top:10px; text-align:center;">
+                        <img id="ytPreviewImg" src="" alt="추출된 썸네일" style="width:100%; border-radius:8px; margin-bottom:8px; border:1px solid #444;">
+                        <div style="display:flex; gap:5px; justify-content:center;">
+                            <a id="ytDownloadLink" href="#" target="_blank" class="action-btn" style="text-decoration:none; font-size:0.8rem; padding:8px;">💾 다운로드</a>
+                            <button id="ytUseRefBtn" class="action-btn" style="font-size:0.8rem; padding:8px;">📷 참고용 등록</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
                     <h2>1. 이미지 업로드</h2>
                     <details class="sample-details">
                         <summary>📂 샘플 디자인 보기 (클릭)</summary>
                         <div class="sample-image-container">
-                            <img src="imgs/Wdp_sTGF7h4.jpg" alt="샘플 썸네일" class="sample-thumb">
-                            <p class="sample-label">샘플 디자인</p>
+                            <img id="samplePreview" src="" alt="샘플 미리보기" class="sample-thumb" style="display:none;">
+                            <p class="sample-label" id="samplePlaceholder">이미지를 업로드하여 참고하세요.</p>
                             <label class="action-btn" style="margin-top:10px; cursor:pointer; display:block;">
                                 📷 내 참고 이미지 업로드
                                 <input type="file" id="benchmarkImage" accept="image/*" style="display:none;">
@@ -151,34 +167,43 @@
             </article>
 
             <article class="content-article">
-                <h3>PART 4. 유튜브 썸네일 제작 도구 총정리 (2026년판)</h3>
-                <p>유튜브 썸네일을 만드는 방법은 매우 다양합니다. 자신의 상황과 디자인 스킬에 맞는 최적의 도구를 선택하는 것이 효율적인 채널 운영의 핵심입니다.</p>
+                <h3>PART 4. 유튜브 썸네일 제작 도구별 상세 가이드 (2026년판)</h3>
+                <p>썸네일을 만드는 방법은 도구에 따라 천차만별입니다. 각 도구별 구체적인 제작 단계를 따라해 보세요.</p>
 
-                <h4>1. 전문 디자인 플랫폼 (Canva, 미리캔버스, 망고보드)</h4>
-                <ul>
-                    <li><strong>장점:</strong> 수만 개의 템플릿과 다양한 디자인 요소(아이콘, 폰트)를 제공하여 디자인 감각이 없어도 평균 이상의 퀄리티를 낼 수 있습니다.</li>
-                    <li><strong>단점:</strong> 무료 버전에서는 사용 가능한 요소에 제한이 많고, 저작권 문제로 유료 구독이 거의 필수적입니다. 또한 기능이 방대하여 초보자에게는 다소 복잡하게 느껴질 수 있습니다.</li>
-                    <li><strong>추천 대상:</strong> 브이로그, 예능, 리뷰 등 다양한 스타일의 썸네일이 필요한 채널.</li>
-                </ul>
+                <h4>1. 전문 디자인 플랫폼 (Canva, 미리캔버스) - *초보자 추천*</h4>
+                <p>디자인 감각이 부족하다면, 이미 완성된 템플릿을 수정하는 것이 가장 빠릅니다.</p>
+                <ol>
+                    <li><strong>템플릿 검색:</strong> '유튜브 썸네일' 카테고리에서 내 영상 주제(예: 브이로그, 먹방)와 어울리는 템플릿을 선택합니다.</li>
+                    <li><strong>텍스트 수정:</strong> 기존 문구를 클릭하여 나의 '핵심 카피'로 변경합니다. 이때 폰트 스타일은 가급적 유지하는 것이 좋습니다.</li>
+                    <li><strong>이미지 교체:</strong> 템플릿의 인물 사진을 내 사진으로 드래그 앤 드롭하여 교체합니다.</li>
+                    <li><strong>다운로드:</strong> '내보내기'를 눌러 JPG 또는 PNG 고화질로 저장합니다.</li>
+                </ol>
 
-                <h4>2. 유썸생 (PB Studio) - *현재 사용 중인 도구*</h4>
-                <ul>
-                    <li><strong>장점:</strong> 별도의 가입이나 설치 없이 '강연/인터뷰/정보 전달'에 최적화된 고퀄리티 썸네일을 1분 만에 제작할 수 있습니다. 특히 <strong>AI 배경 제거</strong>와 <strong>자동 레이아웃</strong> 기능은 독보적인 생산성을 제공합니다.</li>
-                    <li><strong>특징:</strong> 복잡한 기능은 빼고, 조회수를 높이는 핵심 요소(인물 강조, 가독성 텍스트)에만 집중했습니다.</li>
-                    <li><strong>추천 대상:</strong> 강연자, 지식 정보 채널, 관공서 및 기업 유튜브 담당자.</li>
-                </ul>
+                <h4>2. 유썸생 (PB Studio) - *강연/정보 채널 추천*</h4>
+                <p>복잡한 디자인 없이 '인물'과 '메시지'에 집중하고 싶을 때 가장 효율적입니다.</p>
+                <ol>
+                    <li><strong>사진 업로드:</strong> '강연자 사진'에 인물 사진을 올립니다. AI가 3초 만에 배경을 지워줍니다.</li>
+                    <li><strong>배경 설정:</strong> '랜덤 배경 추천' 버튼을 눌러 어울리는 배경을 찾거나, 직접 3장의 이미지를 합성합니다.</li>
+                    <li><strong>문구 입력:</strong> 핵심 메시지를 입력하고, 강조하고 싶은 단어에 괄호 ( )를 칩니다.</li>
+                    <li><strong>즉시 완성:</strong> 미리보기를 확인하고 '다운로드' 버튼을 누르면 끝입니다.</li>
+                </ol>
 
-                <h4>3. 유튜브 스튜디오 자체 기능 (자동 추출)</h4>
-                <ul>
-                    <li><strong>방법:</strong> 영상 업로드 시 유튜브가 자동으로 추천하는 3개의 이미지 중 하나를 선택하거나, 쇼츠(Shorts)의 경우 모바일에서 특정 프레임을 지정할 수 있습니다.</li>
-                    <li><strong>단점:</strong> 텍스트나 보정 효과를 넣을 수 없어 시인성이 매우 떨어집니다. 클릭률(CTR)이 현저히 낮아질 수 있어 권장하지 않습니다.</li>
-                </ul>
+                <h4>3. 유튜브 스튜디오 자체 기능 - *긴급 상황*</h4>
+                <p>이미지를 만들 시간이 도저히 없을 때 사용하는 최후의 수단입니다.</p>
+                <ol>
+                    <li><strong>영상 업로드:</strong> 유튜브 스튜디오에 영상을 올리고 '세부정보' 단계로 진입합니다.</li>
+                    <li><strong>썸네일 선택:</strong> '미리보기 이미지' 항목에서 유튜브가 자동 추출한 3장의 이미지 중 가장 잘 나온 컷을 선택합니다.</li>
+                    <li><strong>주의사항:</strong> 텍스트가 없어 클릭률이 낮을 수 있으니, 제목(Title)에 더욱 신경 써야 합니다.</li>
+                </ol>
 
-                <h4>4. 전문 그래픽 툴 (Photoshop, Illustrator)</h4>
-                <ul>
-                    <li><strong>장점:</strong> 상상하는 모든 것을 구현할 수 있는 무한한 자유도를 가집니다.</li>
-                    <li><strong>단점:</strong> 높은 러닝 커브와 비싼 비용(월 구독료)이 듭니다. 썸네일 하나를 만드는 데 많은 시간이 소요될 수 있습니다.</li>
-                </ul>
+                <h4>4. 전문 그래픽 툴 (Photoshop) - *전문가용*</h4>
+                <p>나만의 독창적인 효과(불타는 자막, 입체 효과 등)가 필요할 때 사용합니다.</p>
+                <ol>
+                    <li><strong>캔버스 설정:</strong> 1280x720 픽셀 (72dpi) 사이즈로 새 문서를 만듭니다.</li>
+                    <li><strong>누끼 따기:</strong> '개체 선택 도구(Object Selection Tool)'로 인물을 분리합니다.</li>
+                    <li><strong>레이어 스타일:</strong> 텍스트 레이어에 '획(Stroke)'과 '드롭 섀도(Drop Shadow)'를 추가하여 가독성을 높입니다.</li>
+                    <li><strong>보정:</strong> 'Camera Raw 필터'로 인물의 선명도와 채도를 높여 주목도를 극대화합니다.</li>
+                </ol>
             </article>
 
             <article class="content-article">
