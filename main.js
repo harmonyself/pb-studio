@@ -37,7 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 버튼
     const downloadBtn = document.getElementById('downloadBtn');
-    const aiGenBtn = document.getElementById('aiGenBtn'); // 랜덤 배경 버튼
 
     // --- 테마 토글 로직 ---
     const themeToggleBtn = document.getElementById('theme-toggle');
@@ -83,58 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(loadingOverlay);
     }
 
-    // --- 랜덤 샘플 이미지 로직 ---
-    const sampleImages = [
-        '04XRaG6B2eY.jpg', '8mmdj8QAkJ4.jpg', '8-SB7L-WiHM.jpg', 'D1vl4VmYWjo.jpg', 
-        'E6_5VwK9knc.jpg', 'gxajbaGlJn4.jpg', 'Ia7IAMYlh2o.jpg', 'kfPvELNvP7w.jpg', 
-        'mOGXTUqS8Cc.jpg', 'o7tpNfJOk4M.jpg', 'obR3cGk50hU.jpg', 'TRIxJpBXJCU.jpg', 
-        'Wdp_sTGF7h4.jpg', '-XHZ4y98sd4.jpg', '_qNWSGlcUeI.jpg'
-    ];
 
-    // --- 랜덤 배경 추천 로직 ---
-    if (aiGenBtn) {
-        aiGenBtn.addEventListener('click', () => {
-            const shuffled = [...sampleImages].sort(() => 0.5 - Math.random());
-            const selected = shuffled.slice(0, 3);
-            
-            const originalText = aiGenBtn.textContent;
-            aiGenBtn.textContent = '🎲 배경 생성 중...';
-            aiGenBtn.disabled = true;
-
-            const loadPromise = (src, index) => {
-                return new Promise((resolve) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        const bgState = state.backgrounds[index];
-                        bgState.img = img;
-                        const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
-                        bgState.scale = scale;
-                        bgState.x = canvas.width / 2;
-                        bgState.y = canvas.height / 2;
-                        resolve();
-                    };
-                    img.onerror = () => {
-                         state.backgrounds[index].img = null;
-                         resolve();
-                    }
-                    img.src = 'imgs/' + src;
-                });
-            };
-
-            Promise.all([
-                loadPromise(selected[0], 0),
-                loadPromise(selected[1], 1),
-                loadPromise(selected[2], 2)
-            ]).then(() => {
-                updateSliders('배경1 (좌측)');
-                updateSliders('배경2 (중앙)');
-                updateSliders('배경3 (우측)');
-                drawCanvas();
-                aiGenBtn.textContent = originalText;
-                aiGenBtn.disabled = false;
-            });
-        });
-    }
 
     // --- 상태 관리 객체 ---
     const state = {
@@ -516,7 +464,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         fineTuneControlsContainer.innerHTML = ''; 
         for (const [name, elementState] of Object.entries(controlsMap)) {
-            fineTuneControlsContainer.appendChild(createFineTuneControls(name, elementState));
+            if (elementState) {
+                try {
+                    const control = createFineTuneControls(name, elementState);
+                    if (control) fineTuneControlsContainer.appendChild(control);
+                } catch (e) {
+                    console.warn('Control generation error:', name);
+                }
+            }
         }
 
         if (speakerImageInput) speakerImageInput.addEventListener('change', e => loadImage(e.target.files[0], state.speaker, true));
