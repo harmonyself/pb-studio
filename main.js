@@ -97,13 +97,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const loadPromise = (src, index) => {
                 return new Promise((resolve) => {
                     const img = new Image();
-                    // 로컬 이미지이므로 crossOrigin은 불필요할 수 있으나 안전하게 처리
                     img.onload = () => {
-                        state.backgrounds[index] = img;
+                        // 이미지 로드 성공 시 상태 업데이트
+                        const bgState = state.backgrounds[index];
+                        bgState.img = img;
+                        
+                        // Cover 모드로 초기 스케일 계산
+                        const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+                        bgState.scale = scale;
+                        bgState.x = canvas.width / 2;
+                        bgState.y = canvas.height / 2;
+
                         resolve();
                     };
                     img.onerror = () => {
-                         state.backgrounds[index] = null;
+                         state.backgrounds[index].img = null;
                          resolve();
                     }
                     img.src = 'imgs/' + src;
@@ -115,6 +123,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadPromise(selected[1], 1),
                 loadPromise(selected[2], 2)
             ]).then(() => {
+                // 슬라이더 UI 업데이트 (배경 1,2,3 모두)
+                updateSliders('배경1 (좌측)');
+                updateSliders('배경2 (중앙)');
+                updateSliders('배경3 (우측)');
+                
                 drawCanvas();
                 aiGenBtn.textContent = originalText;
                 aiGenBtn.disabled = false;
@@ -123,12 +136,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 상태 관리 객체 ---
-    // 초기값은 캔버스 크기(1280x720)에 맞춰 설정
     const state = {
         speaker: { img: null, x: 640, y: 720, scale: 1 }, 
-        // 배경 상태 변경: 단일 img -> 3개의 이미지 배열
-        backgrounds: [null, null, null], 
-        background: { x: 0, y: 0, scale: 1 }, // 배경 전체의 위치/크기 조절용 (필요시)
+        // 배경 상태 변경: 객체 배열로 관리 (개별 제어)
+        backgrounds: [
+            { img: null, x: 640, y: 360, scale: 1 },
+            { img: null, x: 640, y: 360, scale: 1 },
+            { img: null, x: 640, y: 360, scale: 1 }
+        ],
         logo: { img: null, x: 1100, y: 50, scale: 0.8 },
         speakerName: { text: '', x: 640, y: 450, size: 40 },
         mainText1: { text: '', x: 640, y: 550, size: 90 },
@@ -182,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /** 3장의 배경 이미지를 자연스럽게 합성하여 그리는 함수 */
     function drawBlendedBackground() {
         // 이미지가 하나도 없으면 검은색 배경
-        if (!state.backgrounds[0] && !state.backgrounds[1] && !state.backgrounds[2]) {
+        if (!state.backgrounds[0].img && !state.backgrounds[1].img && !state.backgrounds[2].img) {
             ctx.fillStyle = '#121212';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             return;
@@ -191,27 +206,32 @@ document.addEventListener('DOMContentLoaded', () => {
         const w = canvas.width;
         const h = canvas.height;
 
-        // 1. 첫 번째 이미지 (좌측) - 기본 베이스로 전체 혹은 좌측 영역
-        if (state.backgrounds[0]) {
-            drawCoverImage(state.backgrounds[0]);
+        // 1. 첫 번째 이미지 (좌측) - 기본 베이스
+        if (state.backgrounds[0].img) {
+            drawImage(state.backgrounds[0]);
         }
         
-        // 2. 두 번째 이미지 (중앙) - 좌우 투명 그라데이션 마스크로 중앙에 합성
-        if (state.backgrounds[1]) {
+        // 2. 두 번째 이미지 (중앙) - 좌우 투명 그라데이션 마스크
+        if (state.backgrounds[1].img) {
             ctx.save();
             const tempCanvas = document.createElement('canvas');
             tempCanvas.width = w;
             tempCanvas.height = h;
             const tCtx = tempCanvas.getContext('2d');
             
-            // 이미지 그리기 (Cover 모드)
-            const img = state.backgrounds[1];
-            const scale = Math.max(w / img.width, h / img.height);
-            const x = (w - img.width * scale) / 2;
-            const y = (h - img.height * scale) / 2;
-            tCtx.drawImage(img, x, y, img.width * scale, img.height * scale);
+            // 임시 캔버스에 이미지 그리기 (개별 설정 적용)
+            const bgState = state.backgrounds[1];
+            const width = bgState.img.width * bgState.scale;
+            const height = bgState.img.height * bgState.scale;
+            tCtx.drawImage(
+                bgState.img,
+                bgState.x - width / 2,
+                bgState.y - height / 2,
+                width,
+                height
+            );
             
-            // 마스크 적용 (좌우 투명하게)
+            // 마스크 적용
             tCtx.globalCompositeOperation = 'destination-in';
             const grad = tCtx.createLinearGradient(0, 0, w, 0);
             grad.addColorStop(0, 'rgba(0,0,0,0)');
@@ -221,26 +241,30 @@ document.addEventListener('DOMContentLoaded', () => {
             tCtx.fillStyle = grad;
             tCtx.fillRect(0, 0, w, h);
             
-            // 본 캔버스에 합성
             ctx.drawImage(tempCanvas, 0, 0);
             ctx.restore();
         }
 
-        // 3. 세 번째 이미지 (우측) - 좌측 투명 그라데이션 마스크로 우측에 합성
-        if (state.backgrounds[2]) {
+        // 3. 세 번째 이미지 (우측) - 좌측 투명 그라데이션 마스크
+        if (state.backgrounds[2].img) {
             ctx.save();
             const tempCanvas = document.createElement('canvas');
             tempCanvas.width = w;
             tempCanvas.height = h;
             const tCtx = tempCanvas.getContext('2d');
             
-            const img = state.backgrounds[2];
-            const scale = Math.max(w / img.width, h / img.height);
-            const x = (w - img.width * scale) / 2;
-            const y = (h - img.height * scale) / 2;
-            tCtx.drawImage(img, x, y, img.width * scale, img.height * scale);
+            const bgState = state.backgrounds[2];
+            const width = bgState.img.width * bgState.scale;
+            const height = bgState.img.height * bgState.scale;
+            tCtx.drawImage(
+                bgState.img,
+                bgState.x - width / 2,
+                bgState.y - height / 2,
+                width,
+                height
+            );
             
-            // 마스크 적용 (좌측 투명하게)
+            // 마스크 적용
             tCtx.globalCompositeOperation = 'destination-in';
             const grad = tCtx.createLinearGradient(0, 0, w, 0);
             grad.addColorStop(0.5, 'rgba(0,0,0,0)');
@@ -254,17 +278,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /** 이미지를 화면 꽉 차게 그리는 헬퍼 (Cover 모드) */
-    function drawCoverImage(img) {
-        const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
-        const x = (canvas.width - img.width * scale) / 2;
-        const y = (canvas.height - img.height * scale) / 2;
-        ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
-    }
-
     // --- 헬퍼 함수들 ---
 
-    /** 이미지를 상태값에 따라 그리는 함수 */
+    /** 이미지를 상태값에 따라 그리는 함수 (중앙 기준) */
     function drawImage(elementState) {
         if (!elementState.img) return;
         
@@ -280,48 +296,41 @@ document.addEventListener('DOMContentLoaded', () => {
         );
     }
 
-    /** 일반 텍스트 그리기 (중앙 정렬, 외곽선 포함) */
     function drawText(text, x, y, size, color, weight) {
         if (!text) return;
         ctx.font = `${weight} ${size}px Pretendard, sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         
-        // 외곽선
         ctx.strokeStyle = 'rgba(0,0,0,0.6)';
         ctx.lineWidth = size * 0.1;
         ctx.lineJoin = 'round';
         ctx.strokeText(text, x, y);
         
-        // 채우기
         ctx.fillStyle = color;
         ctx.fillText(text, x, y);
     }
 
-    /** 강조 텍스트 그리기 (괄호 안의 글자색 변경) */
     function drawHighlightedText(text, x, y, size) {
         if (!text) return;
 
-        ctx.font = `900 ${size}px Pretendard, sans-serif`; // ExtraBold
+        ctx.font = `900 ${size}px Pretendard, sans-serif`;
         ctx.textBaseline = 'middle';
-        ctx.textAlign = 'left'; // 부분별로 그려야 하므로 left 정렬 사용
+        ctx.textAlign = 'left';
 
-        // 1. 텍스트 파싱: (문구) 패턴 분리
-        // 예: "최고의 (기술) 입니다" -> ["최고의 ", "(기술)", " 입니다"]
         const parts = text.split(/(\([^)]+\))/g);
         
-        // 2. 전체 너비 계산 (중앙 정렬을 위해)
         let totalWidth = 0;
         const segments = parts.map(part => {
             let content = part;
             let isHighlight = false;
             
             if (part.startsWith('(') && part.endsWith(')')) {
-                content = part.slice(1, -1); // 괄호 제거
+                content = part.slice(1, -1);
                 isHighlight = true;
             }
             
-            if (content === '') return null; // 빈 문자열 무시
+            if (content === '') return null;
 
             const width = ctx.measureText(content).width;
             totalWidth += width;
@@ -329,22 +338,17 @@ document.addEventListener('DOMContentLoaded', () => {
             return { text: content, highlight: isHighlight, width: width };
         }).filter(s => s !== null);
 
-        // 3. 그리기 시작 위치 (중앙 정렬 보정)
         let currentX = x - (totalWidth / 2);
 
-        // 4. 각 세그먼트 그리기
         segments.forEach(segment => {
-            // 외곽선
             ctx.strokeStyle = 'rgba(0,0,0,0.8)';
             ctx.lineWidth = size * 0.12;
             ctx.lineJoin = 'round';
             ctx.strokeText(segment.text, currentX, y);
             
-            // 글자색
             ctx.fillStyle = segment.highlight ? state.highlightColor : '#FFFFFF';
             ctx.fillText(segment.text, currentX, y);
 
-            // 다음 글자 위치로 이동
             currentX += segment.width;
         });
     }
@@ -354,54 +358,43 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!file) return;
 
         if (isSpeaker) {
-            // 강연자 사진: 배경 제거 시도
             const overlay = document.getElementById('loading-overlay');
             if (overlay) overlay.style.display = 'flex';
 
-            // 1. 라이브러리 존재 여부 확인
             if (typeof imglyRemoveBackground !== 'undefined') {
                 const config = {
                     publicPath: 'https://cdn.jsdelivr.net/npm/@imgly/background-removal-data@1.0.3/dist/',
-                    // device: 'cpu', // GPU 문제 시 CPU 강제 (필요시 주석 해제)
                     progress: (key, current, total) => {
                         const percent = Math.round((current / total) * 100);
-                        updateLoadingText(`AI 모델 다운로드/처리 중: ${percent}%`);
+                        // updateLoadingText(`...`); // UI가 있다면
                     }
                 };
 
-                // 2. 배경 제거 실행
                 imglyRemoveBackground(file, config).then(blob => {
                     const url = URL.createObjectURL(blob);
                     const img = new Image();
                     img.onload = () => {
                         targetState.img = img;
-                        
-                        // 스마트 크롭 (자동 배치)
                         const targetScale = (canvas.height * 0.7) / img.height;
                         targetState.scale = targetScale;
                         targetState.x = canvas.width / 2;
                         targetState.y = canvas.height - (img.height * targetScale / 2) + 50;
-                        
                         updateSliders('강연자');
                         drawCanvas();
                         if (overlay) overlay.style.display = 'none';
                     };
                     img.src = url;
                 }).catch(err => {
-                    // 3. 실패 시 원본 사용 (Fallback)
-                    console.error("배경 제거 실패 (원본 사용):", err);
-                    alert("배경 제거 처리에 실패했습니다. (브라우저 호환성 또는 네트워크 문제)\n원본 이미지를 사용합니다.");
+                    console.error("배경 제거 실패:", err);
+                    alert("배경 제거 실패. 원본 사용.");
                     if (overlay) overlay.style.display = 'none';
                     loadNormalImage(file, targetState, true);
                 });
             } else {
-                // 라이브러리 로드 안됨
-                console.warn("배경 제거 라이브러리 없음 (원본 사용)");
                 if (overlay) overlay.style.display = 'none';
                 loadNormalImage(file, targetState, true);
             }
         } else {
-            // 일반 이미지 (로고, 배경 등)
             loadNormalImage(file, targetState);
         }
     }
@@ -409,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /** 배경 이미지 로드 전용 함수 (배열 인덱스 사용) */
     function loadBackground(file, index) {
         if (!file) {
-            state.backgrounds[index] = null;
+            state.backgrounds[index].img = null;
             drawCanvas();
             return;
         }
@@ -417,7 +410,19 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.onload = e => {
             const img = new Image();
             img.onload = () => {
-                state.backgrounds[index] = img;
+                const bgState = state.backgrounds[index];
+                bgState.img = img;
+                
+                // 로드 시 화면에 꽉 차게(Cover) 자동 스케일링 & 중앙 정렬
+                const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+                bgState.scale = scale;
+                bgState.x = canvas.width / 2;
+                bgState.y = canvas.height / 2;
+
+                // 해당 배경 슬라이더 업데이트
+                const names = ['배경1 (좌측)', '배경2 (중앙)', '배경3 (우측)'];
+                updateSliders(names[index]);
+                
                 drawCanvas();
             };
             img.src = e.target.result;
@@ -432,7 +437,6 @@ document.addEventListener('DOMContentLoaded', () => {
             img.onload = () => {
                 targetState.img = img;
                 if (isSpeaker) {
-                    // 강연자 기본 배치 (배경 제거 실패 시에도)
                     targetState.scale = (canvas.height * 0.7) / img.height;
                     targetState.x = canvas.width / 2;
                     targetState.y = canvas.height - (img.height * targetState.scale / 2);
@@ -447,9 +451,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 정밀 조정 UI ---
     
-    // UI 컨트롤 그룹 매핑 (이름 -> 상태 객체)
+    // UI 컨트롤 그룹 매핑
     const controlsMap = {
         '강연자': state.speaker,
+        '배경1 (좌측)': state.backgrounds[0],
+        '배경2 (중앙)': state.backgrounds[1],
+        '배경3 (우측)': state.backgrounds[2],
         '로고': state.logo,
         '이름/소속': state.speakerName,
         '강조문구1': state.mainText1,
@@ -472,7 +479,10 @@ document.addEventListener('DOMContentLoaded', () => {
         title.style.color = '#ddd';
         wrapper.appendChild(title);
 
-        ['x', 'y', 'scale', 'size'].forEach(prop => {
+        // 배경의 경우 size 속성은 없음, x,y,scale만
+        const props = ['x', 'y', 'scale', 'size'];
+
+        props.forEach(prop => {
             if (elementState[prop] === undefined) return;
 
             const row = document.createElement('div');
@@ -502,7 +512,6 @@ document.addEventListener('DOMContentLoaded', () => {
             slider.dataset.group = name; // 식별용 데이터 속성
             slider.dataset.prop = prop;
 
-            // 이벤트 리스너: 슬라이더 조작 시 상태 업데이트 및 다시 그리기
             slider.addEventListener('input', (e) => {
                 elementState[prop] = parseFloat(e.target.value);
                 drawCanvas();
@@ -516,7 +525,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return wrapper;
     }
 
-    /** 특정 그룹의 슬라이더 값을 현재 state 값으로 업데이트 (자동 배치 후 호출) */
+    /** 특정 그룹의 슬라이더 값을 현재 state 값으로 업데이트 */
     function updateSliders(groupName) {
         const sliders = fineTuneControlsContainer.querySelectorAll(`input[data-group="${groupName}"]`);
         const elementState = controlsMap[groupName];
@@ -539,7 +548,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (highlightColorInput) state.highlightColor = highlightColorInput.value;
 
         // 2. 정밀 조정 UI 생성
-        fineTuneControlsContainer.innerHTML = ''; // 초기화
+        fineTuneControlsContainer.innerHTML = ''; 
         for (const [name, elementState] of Object.entries(controlsMap)) {
             fineTuneControlsContainer.appendChild(createFineTuneControls(name, elementState));
         }
@@ -547,7 +556,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // 3. 정적 Input 이벤트 리스너 연결
         if (speakerImageInput) speakerImageInput.addEventListener('change', e => loadImage(e.target.files[0], state.speaker, true));
         
-        // 배경 이미지 입력 리스너 (3개)
         if (bgImageInput1) bgImageInput1.addEventListener('change', e => loadBackground(e.target.files[0], 0));
         if (bgImageInput2) bgImageInput2.addEventListener('change', e => loadBackground(e.target.files[0], 1));
         if (bgImageInput3) bgImageInput3.addEventListener('change', e => loadBackground(e.target.files[0], 2));
@@ -569,7 +577,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // 4. 초기 그리기
-        // 폰트 로딩 대기 후 그리기
         document.fonts.ready.then(() => {
             drawCanvas();
         });
