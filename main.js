@@ -359,10 +359,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const wrapper = document.createElement('div');
         wrapper.className = 'fine-tune-group';
         wrapper.style.marginBottom = '20px';
-        wrapper.style.padding = '10px';
-        wrapper.style.background = 'var(--surface-color)';
+        wrapper.style.padding = '15px';
         wrapper.style.border = '1px solid var(--border-color)';
         wrapper.style.borderRadius = '8px';
+        wrapper.style.overflow = 'hidden';
 
         const title = document.createElement('h4');
         title.textContent = name;
