@@ -358,17 +358,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function createFineTuneControls(name, elementState) {
         const wrapper = document.createElement('div');
         wrapper.className = 'fine-tune-group';
-        wrapper.style.marginBottom = '20px';
-        wrapper.style.padding = '15px';
-        wrapper.style.border = '1px solid var(--border-color)';
-        wrapper.style.borderRadius = '8px';
-        wrapper.style.overflow = 'hidden';
 
         const title = document.createElement('h4');
         title.textContent = name;
-        title.style.margin = '0 0 10px 0';
-        title.style.fontSize = '14px';
-        title.style.color = 'var(--primary-text-color)';
         wrapper.appendChild(title);
 
         const props = ['x', 'y', 'scale', 'size'];
@@ -377,18 +369,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (elementState[prop] === undefined) return;
 
             const row = document.createElement('div');
-            row.style.display = 'flex';
-            row.style.alignItems = 'center';
-            row.style.marginBottom = '5px';
+            row.className = 'fine-tune-row';
 
             const label = document.createElement('label');
             label.textContent = prop.toUpperCase();
-            label.style.width = '50px';
-            label.style.fontSize = '12px';
 
             const slider = document.createElement('input');
             slider.type = 'range';
-            slider.style.flex = '1';
             
             if (prop === 'scale') {
                 slider.min = 0.1; slider.max = 3.0; slider.step = 0.01;
