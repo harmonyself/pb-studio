@@ -41,20 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // 로딩 오버레이
-    let loadingOverlay = document.getElementById('loading-overlay');
-    if (!loadingOverlay) {
-        loadingOverlay = document.createElement('div');
-        loadingOverlay.id = 'loading-overlay';
-        loadingOverlay.style.display = 'none';
-        loadingOverlay.innerHTML = `
-            <div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;flex-direction:column;justify-content:center;align-items:center;color:white;">
-                <div class="spinner" style="width:50px;height:50px;border:5px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 1s infinite linear;margin-bottom:20px;"></div>
-                <p>배경 제거 처리 중...</p>
-                <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
-            </div>
-        `;
-        document.body.appendChild(loadingOverlay);
-    }
+    const loadingOverlay = document.getElementById('loading-overlay');
 
 
 
