@@ -1,10 +1,10 @@
-// youtube_data.js - 100% Reliable Data Engine
+// youtube_data.js - 100% Stable Data Engine (Fixed)
 
-// 스타일 및 분야별 트렌드 (검증된 실제 영상 ID만 사용)
+// 스타일 및 분야별 트렌드 (검증된 실제 영상 ID 사용)
 const STYLE_TRENDS = [
     {
         category: "1. 스케일 & 엔터테인먼트 (High Scale)",
-        desc: "압도적인 제작비와 스케일로 클릭을 유도하는 스타일 (MrBeast)",
+        desc: "압도적인 제작비와 스케일로 클릭을 유도하는 스타일",
         videos: [
             { id: "0e3GPea1Tyg", title: "$456,000 Squid Game In Real Life!", channel: "MrBeast", desc: "넷플릭스 세트장을 현실로 옮겨온 압도적 비주얼." },
             { id: "r7McqF9qbWo", title: "Lamborghini vs Shredder", channel: "MrBeast", desc: "슈퍼카와 분쇄기라는 자극적인 소재의 대비." },
@@ -14,11 +14,11 @@ const STYLE_TRENDS = [
     },
     {
         category: "2. K-POP & 비주얼 (Visual & Color)",
-        desc: "화려한 색감과 인물 중심의 구도 (Global K-Pop)",
+        desc: "화려한 색감과 인물 중심의 구도",
         videos: [
-            { id: "gdZLi9oWNZg", title: "BTS (방탄소년단) 'Dynamite' Official MV", channel: "HYBE LABELS", desc: "파스텔톤 색감과 레트로한 분위기의 조화." },
+            { id: "gdZLi9oWNZg", title: "BTS 'Dynamite' Official MV", channel: "HYBE LABELS", desc: "파스텔톤 색감과 레트로한 분위기의 조화." },
             { id: "gNi_6U5Pm_o", title: "BLACKPINK - ‘Shut Down’ M/V", channel: "BLACKPINK", desc: "강렬한 인물 포커싱과 힙합 무드." },
-            { id: "9bZkp7q19f0", title: "PSY - GANGNAM STYLE(강남스타일) M/V", channel: "officialpsy", desc: "원색적인 색감과 역동적인 포즈." },
+            { id: "9bZkp7q19f0", title: "PSY - GANGNAM STYLE M/V", channel: "officialpsy", desc: "원색적인 색감과 역동적인 포즈." },
             { id: "f5_wn8mexMM", title: "TWICE 'The Feels' M/V", channel: "JYP Entertainment", desc: "멤버 전원의 매력을 살린 하이틴 컨셉." }
         ]
     },
@@ -28,7 +28,7 @@ const STYLE_TRENDS = [
         videos: [
             { id: "xoxhDk-hwuo", title: "World's Largest T-Shirt Cannon", channel: "Mark Rober", desc: "엔지니어링 과정을 흥미롭게 시각화." },
             { id: "hFZFjoX2cGg", title: "Backyard Squirrel Maze 1.0", channel: "Mark Rober", desc: "다람쥐와 미로라는 독특한 소재 매칭." },
-            { id: "y97rBdSYbkg", title: "The Slinky Drop", channel: "Veritasium", desc: "일상적인 물건(슬링키)의 낯선 물리 현상 포착." },
+            { id: "y97rBdSYbkg", title: "The Slinky Drop", channel: "Veritasium", desc: "일상적인 물건의 낯선 물리 현상 포착." },
             { id: "CFyCoMA1u5k", title: "Water Bottle Flip 2", channel: "Dude Perfect", desc: "성공의 짜릿한 순간을 썸네일로 고정." }
         ]
     },
@@ -36,10 +36,10 @@ const STYLE_TRENDS = [
         category: "4. 글로벌 뮤직 히트 (Global Hits)",
         desc: "전 세계에서 가장 많은 '좋아요'를 받은 썸네일",
         videos: [
-            { id: "kJQP7kiw5Fk", title: "Luis Fonsi - Despacito ft. Daddy Yankee", channel: "Luis Fonsi", desc: "남미의 열정과 색감을 담은 썸네일." },
-            { id: "RgKAFK5djSk", title: "Wiz Khalifa - See You Again ft. Charlie Puth", channel: "Wiz Khalifa", desc: "영화의 감동을 그대로 전하는 구도." },
-            { id: "JGwWNGJdvx8", title: "Ed Sheeran - Shape of You", channel: "Ed Sheeran", desc: "아티스트를 상징하는 그래픽 아트워크." },
-            { id: "60ItHLz5WEA", title: "Alan Walker - Faded", channel: "Alan Walker", desc: "신비로운 분위기의 마스크와 폐허 배경." }
+            { id: "kJQP7kiw5Fk", title: "Despacito", channel: "Luis Fonsi", desc: "남미의 열정과 색감을 담은 썸네일." },
+            { id: "RgKAFK5djSk", title: "See You Again", channel: "Wiz Khalifa", desc: "영화의 감동을 그대로 전하는 구도." },
+            { id: "JGwWNGJdvx8", title: "Shape of You", channel: "Ed Sheeran", desc: "아티스트를 상징하는 그래픽 아트워크." },
+            { id: "60ItHLz5WEA", title: "Faded", channel: "Alan Walker", desc: "신비로운 분위기의 마스크와 폐허 배경." }
         ]
     }
 ];
@@ -60,16 +60,19 @@ function createTrendSection(sectionData) {
 }
 
 function createCard(item) {
-    // 썸네일 안정성 100% 확보: hqdefault.jpg 사용 (유튜브 표준, 4:3 비율)
-    // CSS object-fit: cover로 16:9 영역에 꽉 차게 보정됨
-    const thumbUrl = `https://img.youtube.com/vi/${item.id}/hqdefault.jpg`;
+    // 1. i.ytimg.com 사용 (공식 도메인)
+    // 2. mqdefault.jpg 사용 (320x180, 16:9 비율) -> hqdefault(4:3)보다 썸네일 리스트에 적합
+    // 3. onerror: 이미지 로드 실패 시 고화질(hqdefault) 시도 -> 그래도 안되면 색상 박스 처리
+    const thumbUrl = `https://i.ytimg.com/vi/${item.id}/mqdefault.jpg`;
+    const fallbackUrl = `https://i.ytimg.com/vi/${item.id}/hqdefault.jpg`;
     const videoUrl = `https://www.youtube.com/watch?v=${item.id}`;
     
     return `
         <div class="trend-card" style="position:relative; display: flex; flex-direction: column;">
             <a href="${videoUrl}" target="_blank" class="thumb-link" style="display: block; width: 100%; aspect-ratio: 16/9; overflow: hidden; border-radius: 8px; background-color: #000;">
                 <img src="${thumbUrl}" alt="${item.title}" class="real-thumb" 
-                     style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35);"> <!-- scale로 레터박스 제거 효과 -->
+                     style="width: 100%; height: 100%; object-fit: cover;"
+                     onerror="this.onerror=null; this.src='${fallbackUrl}';">
             </a>
             <div style="padding: 15px 0 0; flex: 1; display: flex; flex-direction: column;">
                 <h4 style="margin: 0 0 5px 0; font-size: 1.1rem; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.title}</h4>
@@ -85,6 +88,7 @@ function createCard(item) {
 document.addEventListener('DOMContentLoaded', () => {
     const trendList = document.getElementById('trend-list');
     
+    // 에러 방지: 요소가 존재할 때만 실행
     if (trendList) {
         try {
             trendList.style.display = 'block'; 
