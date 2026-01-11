@@ -24,8 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 벤치마킹 & 유튜브 추출 요소
     const benchmarkImageInput = document.getElementById('benchmarkImage');
-    const samplePreview = document.getElementById('samplePreview');
-    const samplePlaceholder = document.getElementById('samplePlaceholder');
+    const referenceContainer = document.getElementById('referenceContainer');
+    const referenceImg = document.getElementById('referenceImg');
+    const closeRefBtn = document.getElementById('closeRefBtn');
     
     const ytUrlInput = document.getElementById('ytUrlInput');
     const ytExtractBtn = document.getElementById('ytExtractBtn');
@@ -550,20 +551,27 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // 벤치마킹: 내 이미지 업로드
+        // 벤치마킹: 내 이미지 업로드 (참고용 이미지)
         if (benchmarkImageInput) {
             benchmarkImageInput.addEventListener('change', e => {
                 const file = e.target.files[0];
                 if (!file) return;
                 const reader = new FileReader();
                 reader.onload = evt => {
-                    if (samplePreview) {
-                        samplePreview.src = evt.target.result;
-                        samplePreview.style.display = 'block';
-                        if (samplePlaceholder) samplePlaceholder.style.display = 'none';
+                    if (referenceImg && referenceContainer) {
+                        referenceImg.src = evt.target.result;
+                        referenceContainer.style.display = 'block';
                     }
                 };
                 reader.readAsDataURL(file);
+            });
+        }
+        
+        // 참고 이미지 닫기 버튼
+        if (closeRefBtn) {
+            closeRefBtn.addEventListener('click', () => {
+                referenceContainer.style.display = 'none';
+                benchmarkImageInput.value = ''; // 파일 입력 초기화
             });
         }
 
@@ -596,10 +604,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // 추출된 이미지를 '참고용'으로 등록
         if (ytUseRefBtn && ytPreviewImg) {
             ytUseRefBtn.addEventListener('click', () => {
-                if (samplePreview) {
-                    samplePreview.src = ytPreviewImg.src;
-                    samplePreview.style.display = 'block';
-                    if (samplePlaceholder) samplePlaceholder.style.display = 'none';
+                if (referenceImg && referenceContainer) {
+                    referenceImg.src = ytPreviewImg.src;
+                    referenceContainer.style.display = 'block';
                 }
             });
         }

@@ -67,17 +67,13 @@
 
                 <div class="control-group">
                     <h2>1. 이미지 업로드</h2>
-                    <details class="sample-details">
-                        <summary>📂 샘플 디자인 보기 (클릭)</summary>
-                        <div class="sample-image-container">
-                            <img id="samplePreview" src="" alt="샘플 미리보기" class="sample-thumb" style="display:none;">
-                            <p class="sample-label" id="samplePlaceholder">이미지를 업로드하여 참고하세요.</p>
-                            <label class="action-btn" style="margin-top:10px; cursor:pointer; display:block;">
-                                📷 내 참고 이미지 업로드
-                                <input type="file" id="benchmarkImage" accept="image/*" style="display:none;">
-                            </label>
-                        </div>
-                    </details>
+                    <div class="control" style="margin-bottom: 20px;">
+                        <label class="action-btn" style="cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                            📂 내 참고 이미지 파일 업로드
+                            <input type="file" id="benchmarkImage" accept="image/*" style="display:none;">
+                        </label>
+                        <p class="description" style="text-align:center; margin-top:5px;">(업로드 시 우측 작업보드 상단에 표시됩니다)</p>
+                    </div>
                     <div class="control">
                         <label for="speakerImage">강연자 사진 (좌측)</label>
                         <input type="file" id="speakerImage" accept="image/*">
@@ -136,6 +132,15 @@
 
             <!-- 썸네일 미리보기 및 다운로드 -->
             <section class="canvas-section">
+                <!-- 참고용 이미지 표시 영역 (작업보드 상단 고정) -->
+                <div id="referenceContainer" style="display:none; width:100%; margin-bottom:15px; text-align:center; position:sticky; top:10px; z-index:90;">
+                    <div style="display:inline-block; position:relative; background:rgba(0,0,0,0.5); padding:5px; border-radius:8px;">
+                        <span style="display:block; color:white; font-size:12px; margin-bottom:4px;">▼ 참고용 디자인</span>
+                        <img id="referenceImg" src="" alt="참고 디자인" style="max-height:180px; max-width:100%; border-radius:4px; border:1px solid #fff;">
+                        <button id="closeRefBtn" style="position:absolute; top:-8px; right:-8px; background:#ff4444; color:white; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-weight:bold; box-shadow:0 2px 5px rgba(0,0,0,0.3);">×</button>
+                    </div>
+                </div>
+
                 <div class="canvas-wrapper">
                     <canvas id="thumbnailCanvas" width="1280" height="720"></canvas>
                 </div>

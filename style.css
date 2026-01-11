@@ -133,7 +133,7 @@ body {
 .main-content {
     display: flex;
     flex: 1;
-    overflow: hidden;
+    overflow: visible;
 }
 
 /* Controls Panel */
@@ -142,7 +142,14 @@ body {
     background-color: var(--surface-color);
     border-right: 1px solid var(--border-color);
     padding: 1.5rem;
-    overflow-y: auto;
+    /* overflow-y: auto;  <-- Remove this to let page scroll if needed, OR keep if we want dual scroll */
+    /* If we want the right side to be sticky, the parent must allow scrolling or the left side must be the one scrolling. */
+    /* Let's make the LEFT side scrollable within the viewport if we want the right side fixed. */
+    /* BUT, the user said "even if I move the menu up and down". This implies the menu (controls) is long and scrolls. */
+    /* So controls-panel is the long scrolling part. */
+    overflow-y: visible; /* Let it flow in the document so window scroll works? OR keep it auto? */
+    /* If controls-panel is auto, then body scroll is not used. Then sticky on right won't work relative to body scroll. */
+    /* We want body scroll. So controls-panel should be visible. */
     flex-shrink: 0;
 }
 
@@ -158,10 +165,17 @@ body {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* justify-content: center; <-- Remove centering to allow top alignment for sticky */
     align-items: center;
     padding: 2rem;
     background: repeating-conic-gradient(var(--bg-color) 0% 25%, var(--surface-color) 0% 50%) 50% / 32px 32px;
+    
+    /* Sticky Magic */
+    position: sticky;
+    top: 0;
+    align-self: flex-start; /* Important for flex child sticky */
+    height: 100vh; /* Fill viewport height */
+    overflow-y: auto; /* Allow scrolling inside canvas section if it gets too tall (e.g. on small screens) */
 }
 
 /* ... existing styles ... */
