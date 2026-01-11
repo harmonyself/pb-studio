@@ -1,6 +1,6 @@
 // youtube_data.js - Enhanced Mock Data Engine
 
-// 실제 인기 영상 데이터 풀 (50개) - 랜덤 셔플용
+// 실제 인기 영상 데이터 풀 (유효한 ID만 엄선)
 const REAL_TREND_POOL = [
     { id: "0e3GPea1Tyg", title: "I Built Willy Wonka's Chocolate Factory!", channel: "MrBeast", desc: "초대형 세트장과 압도적 스케일." },
     { id: "xoxhDk-hwuo", title: "World's Largest T-Shirt Cannon", channel: "Mark Rober", desc: "공학적 호기심과 결과물 선공개." },
@@ -24,7 +24,7 @@ const REAL_TREND_POOL = [
     { id: "VDvr08sCPOc", title: "Counting Stars", channel: "OneRepublic", desc: "어두운 배경과 조명." }
 ];
 
-// 유틸리티: 배열 셔플 (Fisher-Yates)
+// 유틸리티: 배열 셔플
 function shuffleArray(array) {
     const arr = [...array];
     for (let i = arr.length - 1; i > 0; i--) {
@@ -34,29 +34,39 @@ function shuffleArray(array) {
     return arr;
 }
 
-// 유틸리티: 조회수 랜덤 생성 (현장감 부여)
-function getRandomViews() {
-    const num = Math.floor(Math.random() * 500) + 10; // 10 ~ 510
-    const unit = Math.random() > 0.5 ? "만회" : "억회";
-    return `${num}${unit}`;
+// 유틸리티: 조회수 랜덤 생성 (단위: 억/만)
+function getRandomViews(min, max) {
+    const num = Math.floor(Math.random() * (max - min)) + min;
+    if (num > 10000) return `${(num / 10000).toFixed(1)}억회`;
+    return `${num}만회`;
 }
 
-// 렌더링 데이터 생성 (매번 다르게)
+// 렌더링 데이터 생성
 function generateDynamicData() {
     const shuffled = shuffleArray(REAL_TREND_POOL);
     
-    return {
-        trends: {
-            global: shuffled.slice(0, 3).map(item => ({...item, views: getRandomViews()})),
-            korea: shuffled.slice(3, 6).map(item => ({...item, views: getRandomViews()}))
-        },
-        awards: {
-            daily: shuffled.slice(6, 9).map((item, i) => ({...item, rank: i+1, views: getRandomViews(), comment: "오늘 가장 핫한 반응."})),
-            weekly: shuffled.slice(9, 12).map((item, i) => ({...item, rank: i+1, views: getRandomViews(), comment: "주간 조회수 급상승."})),
-            monthly: shuffled.slice(12, 15).map((item, i) => ({...item, rank: i+1, views: getRandomViews(), comment: "이달의 화제작."})),
-            yearly: shuffled.slice(15, 18).map((item, i) => ({...item, rank: i+1, views: getRandomViews(), comment: "올해를 빛낸 썸네일."}))
-        }
+    // 트렌드용: 섞어서 6개
+    const trends = {
+        global: shuffled.slice(0, 3).map(item => ({...item, views: getRandomViews(5000, 30000)})), // 5천만~3억
+        korea: shuffled.slice(3, 6).map(item => ({...item, views: getRandomViews(100, 1500)})) // 100만~1500만
     };
+
+    // 어워즈용: 10개 뽑아서 조회수 기준 내림차순 정렬
+    const awardsRaw = shuffled.slice(0, 10).map(item => {
+        // 비교를 위해 숫자형 viewCount 추가
+        const viewCount = Math.floor(Math.random() * 50000) + 5000; // 5000만 ~ 5.5억
+        return {
+            ...item,
+            rawViews: viewCount,
+            views: `${(viewCount / 100).toFixed(1)}억회`, // 표기용
+            comment: "올해 가장 압도적인 클릭률을 기록했습니다."
+        };
+    });
+
+    // 조회수 높은 순 정렬
+    const awards = awardsRaw.sort((a, b) => b.rawViews - a.rawViews);
+
+    return { trends, awards };
 }
 
 // 트렌드 페이지 렌더링
@@ -77,13 +87,16 @@ function renderTrends() {
 }
 
 function createTrendCard(item) {
-    // 썸네일 URL 생성 (hqdefault 사용 - 안정성)
+    // 썸네일 URL 생성 (hqdefault 사용 - 안정성 확보)
     const thumbUrl = `https://img.youtube.com/vi/${item.id}/hqdefault.jpg`; 
-    // const thumbUrlHigh = `https://img.youtube.com/vi/${item.id}/maxresdefault.jpg`; // 고화질은 가끔 없을 수 있음
+    const videoUrl = `https://www.youtube.com/watch?v=${item.id}`;
+
+    // 링크 유효성 체크: ID가 없으면 렌더링 하지 않음 (상위 로직에서 필터링됨)
+    if (!item.id) return '';
 
     return `
         <div class="trend-card">
-            <a href="https://www.youtube.com/watch?v=${item.id}" target="_blank" class="thumb-link">
+            <a href="${videoUrl}" target="_blank" class="thumb-link">
                 <img src="${thumbUrl}" alt="${item.title}" class="real-thumb">
                 <span class="views">${item.views}</span>
             </a>
@@ -94,74 +107,57 @@ function createTrendCard(item) {
     `;
 }
 
-// 어워즈 페이지 렌더링
-function renderAwards(period = 'weekly') {
+// 어워즈 페이지 렌더링 (TOP 10)
+function renderAwards() {
     const list = document.getElementById('award-list');
     const periodLabel = document.getElementById('award-period-label');
     if (!list) return;
 
     // 로딩 효과
-    list.innerHTML = '<div class="loading-state"><div class="spinner" style="margin:0 auto 20px;"></div><p>실시간 데이터 집계 중...</p></div>';
+    list.innerHTML = '<div class="loading-state"><div class="spinner" style="margin:0 auto 20px;"></div><p>2026년 누적 데이터 집계 중...</p></div>';
     
     setTimeout(() => {
-        // 매번 새로 생성하여 랜덤 효과 부여
-        const dynamicData = generateDynamicData();
-        const data = dynamicData.awards[period];
+        const data = generateDynamicData().awards;
         const date = new Date().toLocaleDateString();
         
-        if (periodLabel) periodLabel.textContent = `기준일: ${date} (${getPeriodText(period)})`;
+        if (periodLabel) periodLabel.textContent = `기준일: ${date} (실시간 누적 집계)`;
 
         list.innerHTML = data.map((item, index) => {
             const thumbUrl = `https://img.youtube.com/vi/${item.id}/hqdefault.jpg`;
-            const badge = index === 0 ? '1st' : index === 1 ? '2nd' : '3rd';
-            const medalClass = index === 0 ? 'gold' : index === 1 ? 'silver' : 'bronze';
-            const badgeColor = index === 0 ? '#ffd700' : index === 1 ? '#c0c0c0' : '#cd7f32';
+            const videoUrl = `https://www.youtube.com/watch?v=${item.id}`;
+            const rank = index + 1;
             
+            // 메달 색상 및 스타일
+            let rankClass = '';
+            let badgeStyle = 'background:#444; color:white;'; // 기본 (4~10위)
+            
+            if (rank === 1) { rankClass = 'gold'; badgeStyle = 'color:#ffd700; font-size:2.5rem;'; }
+            else if (rank === 2) { rankClass = 'silver'; badgeStyle = 'color:#c0c0c0; font-size:2.2rem;'; }
+            else if (rank === 3) { rankClass = 'bronze'; badgeStyle = 'color:#cd7f32; font-size:2rem;'; }
+            else { badgeStyle = 'font-size:1.5rem; color:#888;'; }
+
             return `
-                <div class="rank-item ${medalClass}">
-                    <div class="rank-badge" style="color:${badgeColor}">${badge}</div>
+                <div class="rank-item ${rankClass}">
+                    <div class="rank-badge" style="${badgeStyle}">${rank}</div>
                     <div class="rank-thumb">
-                        <a href="https://www.youtube.com/watch?v=${item.id}" target="_blank" class="thumb-link" style="margin:0;">
+                        <a href="${videoUrl}" target="_blank" class="thumb-link" style="margin:0;">
                             <img src="${thumbUrl}" alt="${item.title}" class="real-thumb">
                         </a>
                     </div>
                     <div class="rank-info">
                         <h3>${item.title}</h3>
                         <p class="channel">채널명: ${item.channel}</p>
-                        <p class="stats">🔥 조회수: ${item.views}</p>
+                        <p class="stats">🔥 누적 조회수: ${item.views}</p>
                         <p class="comment">${item.comment}</p>
                     </div>
                 </div>
             `;
         }).join('');
-    }, 600); // 0.6초 딜레이
-}
-
-function getPeriodText(period) {
-    if(period === 'daily') return '일간 집계';
-    if(period === 'weekly') return '주간 집계';
-    if(period === 'monthly') return '월간 집계';
-    return '연간 집계';
+    }, 800); // 조회 연출 딜레이
 }
 
 // 초기화
 document.addEventListener('DOMContentLoaded', () => {
-    // 트렌드 페이지
-    if (document.getElementById('global-trend-list')) {
-        renderTrends();
-    }
-
-    // 어워즈 페이지
-    if (document.getElementById('award-list')) {
-        renderAwards('weekly'); // 초기값
-
-        const tabs = document.querySelectorAll('.tab-btn');
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                renderAwards(tab.dataset.period);
-            });
-        });
-    }
+    renderTrends();
+    renderAwards();
 });
