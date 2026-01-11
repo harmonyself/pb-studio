@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainText2Input = document.getElementById('mainText2');
     const highlightColorInput = document.getElementById('highlightColor');
     const fineTuneControlsContainer = document.getElementById('fine-tune-controls');
+    
+    // 참고 이미지 업로드
+    const benchmarkImageInput = document.getElementById('benchmarkImage');
 
     // 버튼
     const downloadBtn = document.getElementById('downloadBtn');
@@ -573,6 +576,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 link.download = 'thumbnail.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
+            });
+        }
+
+        // 참고 이미지 업로드 핸들러
+        if (benchmarkImageInput) {
+            benchmarkImageInput.addEventListener('change', e => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = evt => {
+                    const sampleThumbElement = document.querySelector('.sample-thumb');
+                    if (sampleThumbElement) {
+                        sampleThumbElement.src = evt.target.result;
+                    }
+                };
+                reader.readAsDataURL(file);
             });
         }
 
