@@ -103,9 +103,15 @@
 
                 <div class="control-group">
                     <h2>2. 텍스트 입력(자막으로 나올 원하는 문구로 수정해 주세요)</h2>
-                    <div class="control">
-                        <label for="speakerName">강연자 이름/소속</label>
-                        <input type="text" id="speakerName" value="유썸생 | 유튜브 썸네일 생성기">
+                    <div class="control-group-row" style="display:flex; gap:10px;">
+                        <div class="control" style="flex:1;">
+                            <label for="speakerNameText">이름</label>
+                            <input type="text" id="speakerNameText" value="홍길동">
+                        </div>
+                        <div class="control" style="flex:1;">
+                            <label for="speakerAffiliationText">소속</label>
+                            <input type="text" id="speakerAffiliationText" value="유썸생 대표">
+                        </div>
                     </div>
                     <div class="control">
                         <label for="mainText1">강조 문구 1</label>
