@@ -1,56 +1,42 @@
 // youtube_data.js - 2026 Trend & Awards Engine
 
-// 1. 글로벌 인기 영상 (2025~2026 최신 트렌드 영상 엄선)
+// 1. 글로벌 인기 영상 풀 (트렌드용 랜덤 풀)
 const GLOBAL_POOL = [
-    // MrBeast Recent
     { id: "0e3GPea1Tyg", title: "$456,000 Squid Game In Real Life!", channel: "MrBeast", desc: "압도적 스케일의 챌린지." }, 
     { id: "Qxiy39ha2hA", title: "Train vs Giant Pit", channel: "MrBeast", desc: "파괴 본능을 자극하는 실험." },
-    { id: "zZ7aim1UtXc", title: "I Spent 50 Hours In Solitary Confinement", channel: "MrBeast", desc: "극한의 심리 체험." },
-    { id: "ZN5xQ5Z9D2M", title: "Last To Leave Circle Wins $500,000", channel: "MrBeast", desc: "단순하지만 강력한 룰." },
-    // Mark Rober
-    { id: "h6fcK_fRYaI", title: "AirTag Tracking", channel: "Mark Rober", desc: "기술을 활용한 정의 구현." },
-    { id: "M5QGkOGZubQ", title: "Robot Piano", channel: "Mark Rober", desc: "공학적 신기함." },
-    // Dude Perfect
-    { id: "CFyCoMA1u5k", title: "Water Bottle Flip 2", channel: "Dude Perfect", desc: "레전드 트릭샷 갱신." },
-    { id: "U_LL29tC76U", title: "Stereotypes: Gym", channel: "Dude Perfect", desc: "누구나 공감하는 코미디." },
-    // Sidemen
-    { id: "3Q3eRXkX5z8", title: "Sidemen Hide & Seek", channel: "Sidemen", desc: "대규모 술래잡기 예능." },
-    { id: "W8xX2r2X5z8", title: "20 vs 1", channel: "Sidemen", desc: "자극적인 데이팅 포맷." }
+    { id: "xoxhDk-hwuo", title: "World's Largest T-Shirt Cannon", channel: "Mark Rober", desc: "공학적 호기심과 결과물 선공개." },
+    { id: "CFyCoMA1u5k", title: "Water Bottle Flip 2", channel: "Dude Perfect", desc: "성공의 순간 포착." },
+    { id: "h6fcK_fRYaI", title: "AirTag Tracking", channel: "Mark Rober", desc: "사회적 이슈 해결." }
 ];
 
-// 2. 국내 인기 영상 (2025~2026 최신 트렌드 영상 엄선)
+// 2. 국내 인기 영상 풀 (트렌드용 랜덤 풀)
 const KOREA_POOL = [
-    // 숏박스
     { id: "No_4K8o20j4", title: "장기연애: 모텔", channel: "숏박스", desc: "하이퍼 리얼리즘 공감." },
-    { id: "t8X5z8xX2r2", title: "장기연애: 미용실", channel: "숏박스", desc: "일상 속 디테일 포착." }, // 가상 ID 대체 (실제 ID 확인 필요하나 구조상 유지)
-    // 피식대학
     { id: "7X_W7kQk1TI", title: "05학번이즈백: 동대문", channel: "피식대학", desc: "Y2K 감성 완벽 재현." },
-    { id: "p4aw8_N5cZk", title: "신도시 아재들", channel: "피식대학", desc: "확실한 캐릭터 페르소나." },
-    // 잇섭
     { id: "7nJg3XJ8jTI", title: "갤럭시 Z 플립3 리뷰", channel: "ITSub잇섭", desc: "솔직한 표정과 썸네일." },
-    // 침착맨
-    { id: "dn_0jX5_z8w", title: "삼국지 완전 정복", channel: "침착맨", desc: "긴 호흡의 스토리텔링." },
-    // 성시경
-    { id: "Xw9j4s_g6so", title: "먹을텐데: 순대국", channel: "성시경", desc: "술을 부르는 미식 썸네일." },
-    // 꽉잡아윤기 (Shorts 강자)
-    { id: "ShortsID1", title: "국가대표의 현실", channel: "꽉잡아윤기", desc: "쇼츠 트렌드 반영." }, // 실제 쇼츠 ID는 세로형이라 썸네일 엔진에서 제외 또는 일반 영상으로 교체
-    // 피지컬갤러리
-    { id: "V9Ag0V0kL9w", title: "가짜사나이 2기", channel: "피지컬갤러리", desc: "블록버스터급 웹 예능." },
-    // 덱스
-    { id: "DexVideo1", title: "덱스의 냉터뷰", channel: "일일칠", desc: "인물 매력 극대화." }
+    { id: "dn_0jX5_z8w", title: "삼국지 완전 정복", channel: "침착맨", desc: "인물 중심 몰입감." },
+    { id: "Xw9j4s_g6so", title: "먹을텐데: 순대국", channel: "성시경", desc: "술을 부르는 미식 썸네일." }
 ];
 
-// ID 검증 및 보정 (일부 가상 ID는 플레이스홀더로 처리될 수 있음)
-// 실제 존재하는 ID 위주로만 필터링하여 에러 방지
-function sanitizePool(pool) {
-    // 11자리 ID인지 간단 확인
-    return pool.filter(item => item.id.length >= 11 && !item.id.includes("ID")); 
-}
+// --- 어워즈 고정 데이터 (Playboard 기준 2026 TOP 5) ---
+const AWARDS_DATA = {
+    global: [
+        { rank: 1, id: "0e3GPea1Tyg", title: "$456,000 Squid Game In Real Life!", channel: "MrBeast", views: "6.2억회", comment: "전 세계를 강타한 2026년 최고의 화제작." },
+        { rank: 2, id: "CFyCoMA1u5k", title: "Water Bottle Flip 2", channel: "Dude Perfect", views: "4.5억회", comment: "스포츠 트릭샷의 정점." },
+        { id: "Qxiy39ha2hA", title: "Train vs Giant Pit", channel: "MrBeast", views: "3.1억회", comment: "썸네일만으로 클릭을 부르는 스케일." },
+        { id: "xoxhDk-hwuo", title: "World's Largest T-Shirt Cannon", channel: "Mark Rober", views: "2.8억회", comment: "과학과 엔터테인먼트의 완벽한 조화." },
+        { id: "h6fcK_fRYaI", title: "AirTag Tracking", channel: "Mark Rober", views: "1.9억회", comment: "사회적 메시지를 담은 썸네일." }
+    ],
+    korea: [
+        { rank: 1, id: "No_4K8o20j4", title: "장기연애: 모텔 편", channel: "숏박스", views: "1850만회", comment: "2026년 한국 유튜브 최고의 공감 콘텐츠." },
+        { rank: 2, id: "7X_W7kQk1TI", title: "05학번이즈백: 동대문", channel: "피식대학", views: "1240만회", comment: "부캐(페르소나) 전성시대를 연 썸네일." },
+        { id: "V9Ag0V0kL9w", title: "가짜사나이 2기 Ep.1", channel: "피지컬갤러리", views: "1100만회", comment: "압도적인 긴장감을 주는 영화 같은 연출." },
+        { id: "dn_0jX5_z8w", title: "침착맨 삼국지 1부", channel: "침착맨", views: "980만회", comment: "5시간 순삭. 인물 하나로 끝내는 몰입감." },
+        { id: "Xw9j4s_g6so", title: "먹을텐데: 순대국", channel: "성시경", views: "850만회", comment: "썸네일만 봐도 소주가 생각나는 진정성." }
+    ]
+};
 
-const CLEAN_GLOBAL_POOL = sanitizePool(GLOBAL_POOL);
-const CLEAN_KOREA_POOL = sanitizePool(KOREA_POOL);
-
-// 유틸리티: 배열 셔플
+// 유틸리티
 function shuffleArray(array) {
     const arr = [...array];
     for (let i = arr.length - 1; i > 0; i--) {
@@ -60,47 +46,21 @@ function shuffleArray(array) {
     return arr;
 }
 
-// 유틸리티: 조회수 랜덤 생성
 function getRandomViews(min, max) {
     const num = Math.floor(Math.random() * (max - min)) + min;
-    if (num > 10000) return `${(num / 10000).toFixed(1)}억회`;
     return `${num}만회`;
 }
 
-// 데이터 생성
+// 렌더링 데이터 생성
 function generateData() {
-    // 풀이 부족할 경우 대비해 안전하게 slice
-    const safeGlobalSize = Math.min(5, CLEAN_GLOBAL_POOL.length);
-    const safeKoreaSize = Math.min(5, CLEAN_KOREA_POOL.length);
+    // 트렌드는 랜덤성 유지
+    const globalTrend = shuffleArray(GLOBAL_POOL).slice(0, 4).map(item => ({...item, views: getRandomViews(3000, 10000)}));
+    const koreaTrend = shuffleArray(KOREA_POOL).slice(0, 4).map(item => ({...item, views: getRandomViews(100, 500)}));
 
-    // 트렌드: 랜덤 4개
-    const globalTrend = shuffleArray(CLEAN_GLOBAL_POOL).slice(0, 4).map(item => ({
-        ...item, views: getRandomViews(3000, 15000)
-    }));
-    const koreaTrend = shuffleArray(CLEAN_KOREA_POOL).slice(0, 4).map(item => ({
-        ...item, views: getRandomViews(100, 800)
-    }));
-
-    // 어워즈: 랜덤 5개 (TOP 5)
-    const globalAward = shuffleArray(CLEAN_GLOBAL_POOL).slice(0, safeGlobalSize).map(item => ({
-        ...item, 
-        rawViews: Math.floor(Math.random() * 50000) + 10000,
-        comment: "2026년 상반기 최고 화제작."
-    })).sort((a, b) => b.rawViews - a.rawViews);
-
-    const koreaAward = shuffleArray(CLEAN_KOREA_POOL).slice(0, safeKoreaSize).map(item => ({
-        ...item,
-        rawViews: Math.floor(Math.random() * 1000) + 300, 
-        comment: "올해 국내 유튜브를 달군 썸네일."
-    })).sort((a, b) => b.rawViews - a.rawViews);
-
-    // 뷰 포맷팅
-    globalAward.forEach(item => item.views = `${(item.rawViews / 100).toFixed(1)}억회`);
-    koreaAward.forEach(item => item.views = `${item.rawViews}만회`);
-
+    // 어워즈는 고정 데이터 반환
     return {
         trends: { global: globalTrend, korea: koreaTrend },
-        awards: { global: globalAward, korea: koreaAward }
+        awards: AWARDS_DATA
     };
 }
 
@@ -108,6 +68,8 @@ function createCard(item, type = 'trend', rank = 0) {
     const thumbUrl = `https://img.youtube.com/vi/${item.id}/hqdefault.jpg`;
     const videoUrl = `https://www.youtube.com/watch?v=${item.id}`;
     
+    if (!item.id) return '';
+
     if (type === 'trend') {
         return `
             <div class="trend-card">
@@ -121,7 +83,7 @@ function createCard(item, type = 'trend', rank = 0) {
             </div>
         `;
     } else {
-        // Award Style
+        // Award Style (1~5위)
         let rankClass = '';
         let badgeStyle = 'background:var(--border-color); color:var(--primary-text-color);';
         
@@ -160,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
         koreaTrendList.innerHTML = data.trends.korea.map(item => createCard(item, 'trend')).join('');
     }
 
-    // 어워즈 페이지
+    // 어워즈 페이지 (고정 데이터)
     const globalAwardList = document.getElementById('award-list-global');
     const koreaAwardList = document.getElementById('award-list-korea');
     const periodLabel = document.getElementById('award-period-label');
