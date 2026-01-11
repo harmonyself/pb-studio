@@ -376,13 +376,20 @@ document.addEventListener('DOMContentLoaded', () => {
             slider.dataset.group = name; 
             slider.dataset.prop = prop;
 
+            const valueLabel = document.createElement('span');
+            valueLabel.className = 'value-label';
+            valueLabel.textContent = slider.value;
+
             slider.addEventListener('input', (e) => {
-                elementState[prop] = parseFloat(e.target.value);
+                const val = parseFloat(e.target.value);
+                elementState[prop] = val;
+                valueLabel.textContent = val;
                 drawCanvas();
             });
 
             row.appendChild(label);
             row.appendChild(slider);
+            row.appendChild(valueLabel);
             wrapper.appendChild(row);
         });
 
@@ -398,6 +405,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const prop = slider.dataset.prop;
             if (elementState[prop] !== undefined) {
                 slider.value = elementState[prop];
+                const valueLabel = slider.parentNode.querySelector('.value-label');
+                if (valueLabel) valueLabel.textContent = slider.value;
             }
         });
     }
