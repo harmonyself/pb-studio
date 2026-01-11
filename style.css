@@ -475,54 +475,14 @@ body {
     }
 }
 
-/* Sample & Benchmark Section */
-.benchmark-details {
-    background-color: var(--highlight-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    overflow: hidden;
-}
-
-.benchmark-details summary {
-    padding: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    list-style: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--primary-text-color);
-}
-
-.benchmark-details summary::-webkit-details-marker {
-    display: none;
-}
-
-.benchmark-details summary::after {
-    content: '+';
-    font-size: 1.2rem;
-    font-weight: bold;
-}
-
-.benchmark-details[open] summary::after {
-    content: '-';
-}
-
-.benchmark-details[open] summary {
-    border-bottom: 1px solid var(--border-color);
-}
-
+/* Sample Image Preview Styles */
 .sample-image-container {
-    padding: 15px;
+    margin-bottom: 1.5rem;
     text-align: center;
-}
-
-.benchmark-controls {
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px dashed var(--border-color);
-    text-align: left;
+    background-color: var(--highlight-bg);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
 }
 
 .sample-thumb {

@@ -18,11 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const highlightColorInput = document.getElementById('highlightColor');
     const fineTuneControlsContainer = document.getElementById('fine-tune-controls');
 
-    // 벤치마킹 요소
-    const benchmarkImageInput = document.getElementById('benchmarkImage');
-    const benchmarkOpacityInput = document.getElementById('benchmarkOpacity');
-    const sampleThumbElement = document.querySelector('.sample-thumb');
-
     // 버튼
     const downloadBtn = document.getElementById('downloadBtn');
     const aiGenBtn = document.getElementById('aiGenBtn'); // 랜덤 배경 버튼
@@ -153,8 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         speakerName: { text: '', x: 640, y: 450, size: 40 },
         mainText1: { text: '', x: 640, y: 550, size: 90 },
         mainText2: { text: '', x: 640, y: 650, size: 90 },
-        highlightColor: '#FFFF00',
-        benchmark: { img: null, opacity: 0 } // 벤치마킹 오버레이 상태
+        highlightColor: '#FFFF00'
     };
 
     // --- 메인 그리기 함수 ---
@@ -198,19 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
             state.mainText2.y,
             state.mainText2.size
         );
-
-        // 6. 벤치마킹 오버레이
-        if (state.benchmark.img && state.benchmark.opacity > 0) {
-            drawBenchmarkOverlay();
-        }
-    }
-
-    /** 벤치마킹 오버레이 그리기 */
-    function drawBenchmarkOverlay() {
-        ctx.save();
-        ctx.globalAlpha = state.benchmark.opacity;
-        ctx.drawImage(state.benchmark.img, 0, 0, canvas.width, canvas.height);
-        ctx.restore();
     }
 
     /** 3장의 배경 이미지를 자연스럽게 합성하여 그리는 함수 */
@@ -593,42 +574,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             });
-        }
-
-        // 벤치마킹 리스너
-        if (benchmarkImageInput) {
-            benchmarkImageInput.addEventListener('change', e => {
-                const file = e.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = evt => {
-                    const img = new Image();
-                    img.onload = () => {
-                        state.benchmark.img = img;
-                        if (sampleThumbElement) sampleThumbElement.src = img.src; // 미리보기 업데이트
-                        drawCanvas();
-                    };
-                    img.src = evt.target.result;
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        if (benchmarkOpacityInput) {
-            benchmarkOpacityInput.addEventListener('input', e => {
-                state.benchmark.opacity = parseFloat(e.target.value);
-                drawCanvas();
-            });
-        }
-
-        // 초기 랜덤 샘플 로드 (벤치마킹용)
-        if (sampleThumbElement && sampleThumbElement.src) {
-             const img = new Image();
-             img.crossOrigin = "Anonymous";
-             img.onload = () => {
-                 state.benchmark.img = img;
-             };
-             img.src = sampleThumbElement.src;
         }
 
         // 4. 초기 그리기
