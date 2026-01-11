@@ -6,40 +6,40 @@ const STYLE_TRENDS = [
         category: "1. 스케일 & 엔터테인먼트 (High Scale)",
         desc: "압도적인 제작비와 스케일로 클릭을 유도하는 스타일",
         videos: [
+            { id: "sYk_n-eay2Y", title: "7 Days Stranded at Sea", channel: "MrBeast", desc: "실제 바다 위에서 7일을 버티는 역대급 스케일." },
+            { id: "6S8I-g4gGMI", title: "World's Most Dangerous Trap!", channel: "MrBeast", desc: "인디아나 존스를 연상시키는 거대한 함정 세트." },
             { id: "0e3GPea1Tyg", title: "$456,000 Squid Game In Real Life!", channel: "MrBeast", desc: "넷플릭스 세트장을 현실로 옮겨온 압도적 비주얼." },
-            { id: "r7McqF9qbWo", title: "Lamborghini vs Shredder", channel: "MrBeast", desc: "슈퍼카와 분쇄기라는 자극적인 소재의 대비." },
-            { id: "Qxiy39ha2hA", title: "Train vs Giant Pit", channel: "MrBeast", desc: "결과가 궁금해질 수밖에 없는 물리 실험." },
-            { id: "ZN5xQ5Z9D2M", title: "Last To Leave Circle Wins $500,000", channel: "MrBeast", desc: "단순한 룰과 거액의 상금, 명확한 목표 제시." }
+            { id: "Qxiy39ha2hA", title: "Train vs Giant Pit", channel: "MrBeast", desc: "결과가 궁금해질 수밖에 없는 거대한 물리 실험." }
         ]
     },
     {
         category: "2. K-POP & 비주얼 (Visual & Color)",
         desc: "화려한 색감과 인물 중심의 구도",
         videos: [
-            { id: "gdZLi9oWNZg", title: "BTS 'Dynamite' Official MV", channel: "HYBE LABELS", desc: "파스텔톤 색감과 레트로한 분위기의 조화." },
-            { id: "gNi_6U5Pm_o", title: "BLACKPINK - ‘Shut Down’ M/V", channel: "BLACKPINK", desc: "강렬한 인물 포커싱과 힙합 무드." },
-            { id: "9bZkp7q19f0", title: "PSY - GANGNAM STYLE M/V", channel: "officialpsy", desc: "원색적인 색감과 역동적인 포즈." },
-            { id: "f5_wn8mexMM", title: "TWICE 'The Feels' M/V", channel: "JYP Entertainment", desc: "멤버 전원의 매력을 살린 하이틴 컨셉." }
+            { id: "p_S1g09lG-A", title: "(G)I-DLE - 'Super Lady' Official M/V", channel: "Cube Entertainment", desc: "강렬한 여성 서사와 압도적인 군무 비주얼." },
+            { id: "Yud0vj8L83Y", title: "LE SSERAFIM 'Smart' OFFICIAL M/V", channel: "HYBE LABELS", desc: "이국적인 배경과 멤버들의 퍼포먼스 조화." },
+            { id: "D8kUxb5p4cE", title: "aespa 'Drama' MV", channel: "SMTOWN", desc: "드라마틱한 스토리와 미래적인 CG 효과." },
+            { id: "da4fG2d-v5s", title: "IVE 'Baddie' MV", channel: "starshipTV", desc: "힙한 스타일링과 자신감 넘치는 멤버들의 표정." }
         ]
     },
     {
         category: "3. 호기심 & 과학 (Curiosity & Science)",
         desc: "결과물을 미리 보여주거나 과정을 궁금하게 만드는 스타일",
         videos: [
-            { id: "xoxhDk-hwuo", title: "World's Largest T-Shirt Cannon", channel: "Mark Rober", desc: "엔지니어링 과정을 흥미롭게 시각화." },
-            { id: "hFZFjoX2cGg", title: "Backyard Squirrel Maze 1.0", channel: "Mark Rober", desc: "다람쥐와 미로라는 독특한 소재 매칭." },
-            { id: "y97rBdSYbkg", title: "The Slinky Drop", channel: "Veritasium", desc: "일상적인 물건의 낯선 물리 현상 포착." },
-            { id: "CFyCoMA1u5k", title: "Water Bottle Flip 2", channel: "Dude Perfect", desc: "성공의 짜릿한 순간을 썸네일로 고정." }
+            { id: "l94v4yE2jT4", title: "World's Largest Nerf Gun!!", channel: "Mark Rober", desc: "거대한 너프건이라는 흥미로운 소재와 과학 원리." },
+            { id: "2tS_gYdG9G4", title: "How a Rocket Engine Works", channel: "SmarterEveryDay", desc: "로켓 엔진의 원리를 초고속 카메라로 시각화." },
+            { id: "BickMFHAZR0", title: "The Biggest Myth About Trees", channel: "Veritasium", desc: "나무에 대한 상식을 뒤엎는 흥미로운 과학적 사실." },
+            { id: "XfUnK2f49g8", title: "I Used the First iPhone in 2024", channel: "Mrwhosetheboss", desc: "최신 기술과 구형 기술의 비교라는 흥미로운 주제." }
         ]
     },
     {
         category: "4. 글로벌 뮤직 히트 (Global Hits)",
         desc: "전 세계에서 가장 많은 '좋아요'를 받은 썸네일",
         videos: [
-            { id: "kJQP7kiw5Fk", title: "Despacito", channel: "Luis Fonsi", desc: "남미의 열정과 색감을 담은 썸네일." },
-            { id: "RgKAFK5djSk", title: "See You Again", channel: "Wiz Khalifa", desc: "영화의 감동을 그대로 전하는 구도." },
-            { id: "JGwWNGJdvx8", title: "Shape of You", channel: "Ed Sheeran", desc: "아티스트를 상징하는 그래픽 아트워크." },
-            { id: "60ItHLz5WEA", title: "Faded", channel: "Alan Walker", desc: "신비로운 분위기의 마스크와 폐허 배경." }
+            { id: "kJQP7kiw5Fk", title: "Luis Fonsi - Despacito ft. Daddy Yankee", channel: "Luis Fonsi", desc: "남미의 열정과 색감을 담은 세계적인 히트곡." },
+            { id: "RgKAFK5djSk", title: "Wiz Khalifa - See You Again ft. Charlie Puth", channel: "Wiz Khalifa", desc: "영화의 감동을 그대로 전하는 서정적인 구도." },
+            { id: "IHNzOHi8sJs", title: "BLACKPINK - DDU-DU DDU-DU M/V", channel: "BLACKPINK", desc: "전 세계를 휩쓴 K-POP의 대표적인 히트곡." },
+            { id: "e-ORhEE9VVg", title: "Taylor Swift - Blank Space", channel: "Taylor Swift", desc: "스토리텔링이 돋보이는 상징적인 뮤직비디오." }
         ]
     }
 ];
