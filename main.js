@@ -54,11 +54,11 @@ document.addEventListener('DOMContentLoaded', () => {
             { img: null, x: 640, y: 360, scale: 1 },
             { img: null, x: 640, y: 360, scale: 1 }
         ],
-        logo: { img: null, x: 1085, y: 85, scale: 0.26 }, // 사용자가 요청한 기본값으로 변경
+        logo: { img: null, x: 1200, y: 40, scale: 0.26 }, // 사용자가 요청한 기본값으로 변경
         // 이름/소속 통합 관리 (좌표는 공유)
-        speakerInfo: { name: '홍길동', affiliation: '유썸생 대표', x: 640, y: 450, size: 40 },
-        mainText1: { text: '', x: 640, y: 550, size: 90 },
-        mainText2: { text: '', x: 640, y: 650, size: 90 },
+        speakerInfo: { name: '홍길동', affiliation: '유썸생 대표', x: 1200, y: 400, size: 40 },
+        mainText1: { text: '', x: 1200, y: 460, size: 90 },
+        mainText2: { text: '', x: 1200, y: 560, size: 90 },
         highlightColor: '#FFFF00'
     };
 
