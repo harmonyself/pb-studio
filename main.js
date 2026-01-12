@@ -104,9 +104,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const affFont = `500 ${info.size}px Pretendard, sans-serif`; // 소속: 보통
         const separator = " | ";
 
-        ctx.textBaseline = 'middle';
+        ctx.textBaseline = 'top'; // 기준점을 상단으로 변경
         
-        // 1. 전체 너비 계산 (중앙 정렬용)
+        // 1. 전체 너비 계산 (우측 정렬용)
         ctx.font = nameFont;
         const nameWidth = ctx.measureText(info.name).width;
         
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const sepWidth = ctx.measureText(separator).width;
 
         const totalWidth = nameWidth + sepWidth + affWidth;
-        let startX = info.x - (totalWidth / 2);
+        let startX = info.x - totalWidth; // 기준점을 우측으로 변경
 
         // 2. 그리기 (이름 -> 구분자 -> 소속)
         
@@ -210,14 +210,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!elementState.img) return;
         const w = elementState.img.width * elementState.scale;
         const h = elementState.img.height * elementState.scale;
-        ctx.drawImage(elementState.img, elementState.x - w / 2, elementState.y - h / 2, w, h);
+        
+        // 배경 이미지는 중앙 정렬 유지, 나머지는 우측 상단 기준
+        if (state.backgrounds.includes(elementState)) {
+            ctx.drawImage(elementState.img, elementState.x - w / 2, elementState.y - h / 2, w, h);
+        } else {
+            ctx.drawImage(elementState.img, elementState.x - w, elementState.y, w, h);
+        }
     }
 
     function drawHighlightedText(text, x, y, size) {
         if (!text) return;
 
         ctx.font = `900 ${size}px Pretendard, sans-serif`;
-        ctx.textBaseline = 'middle';
+        ctx.textBaseline = 'top'; // 기준점을 상단으로 변경
         ctx.textAlign = 'left';
 
         const parts = text.split(/(\([^)]+\))/g);
@@ -236,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return { text: content, highlight: isHighlight, width: width };
         }).filter(s => s !== null);
 
-        let currentX = x - (totalWidth / 2);
+        let currentX = x - totalWidth; // 기준점을 우측으로 변경
 
         segments.forEach(segment => {
             ctx.strokeStyle = 'rgba(0,0,0,0.8)';
