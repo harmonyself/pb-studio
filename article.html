@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>아티클 읽기 | 유썸생</title>
+    <link rel="canonical" href="">
+    <meta property="og:title" content="">
+    <meta property="og:description" content="">
+    <meta property="og:image" content="">
+    <meta property="og:url" content="">
+    <meta property="og:type" content="article">
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
@@ -75,6 +81,14 @@
 
             if (article) {
                 document.title = `${article.title} | 유썸생 제작 노하우`;
+                document.querySelector('meta[property="og:title"]').setAttribute("content", document.title);
+                document.querySelector('meta[property="og:description"]').setAttribute("content", article.summary);
+                document.querySelector('meta[property="og:image"]').setAttribute("content", `https://harmonyself.github.io/pb-studio/${article.thumb}`);
+                const canonicalUrl = `https://harmonyself.github.io/pb-studio/article.html?id=${id}`;
+                document.querySelector('link[rel="canonical"]').setAttribute("href", canonicalUrl);
+                document.querySelector('meta[property="og:url"]').setAttribute("content", canonicalUrl);
+
+
                 document.getElementById('article-category').textContent = article.category;
                 document.getElementById('article-title').textContent = article.title;
                 document.getElementById('article-summary').textContent = article.summary;
