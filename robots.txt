@@ -1,4 +1,10 @@
 User-agent: *
+Disallow: /.git/
+Disallow: /.vscode/
+Disallow: /.idx/
+Disallow: /node_modules/
+
 Allow: /
+
 Sitemap: https://youthumb.site/sitemap.xml
 Sitemap: https://pb-studio.pages.dev/sitemap.xml
